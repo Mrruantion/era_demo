@@ -1,7 +1,7 @@
 /**
  * 应用数据库定义，每做一个更改必须更改版本号
  */
-let version = 1;//版本号
+let version = 2;//版本号
 
 //地区表
 // export const area={
@@ -232,6 +232,12 @@ export const customer = {
             'name': 'StorePhoto',
             'desc': '网点图片',
             'type': 'Array',
+            'display': 'TextBox',
+            'query': true,    //可查询字段
+        }, {
+            'name': 'TypeName',
+            'desc': '门店性质',
+            'type': 'String',
             'display': 'TextBox',
             'query': true,    //可查询字段
         },

@@ -131,6 +131,7 @@ class Alert extends Component {
     }
 
     loading(loading_open,loading_text){
+        debugger;
         this.setState({loading_open,loading_text});
     }
 
@@ -206,7 +207,7 @@ class Alert extends Component {
                         <div></div>
                         <div></div>
                         <div></div>
-                        <span>{this.state.loading_text}</span>
+                        <span style={{fontSize:'.13rem'}}>{this.state.loading_text}</span>
                     </div>
                 </div>
             </div>
