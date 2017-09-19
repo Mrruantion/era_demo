@@ -14,6 +14,7 @@ import Area from '../test/_areaData';
 import Input from '../_component/base/input';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import RaisedButton from 'material-ui/RaisedButton';
 
 require('../_sass/store_info.scss');
 
@@ -25,13 +26,13 @@ thisView.addEventListener('load', function () {
 const styles = {
     select: {
         overflow: 'hidden',
-        width: '33%',
+        width: '62%',
         verticalAlign: 'bottom',
         textAlign: 'left',
     },
     babel: {
         paddingRight: '20px',
-        fontSize:'0.24rem'
+        fontSize: '0.24rem'
     },
     menuItem: {
         paddingLeft: '5px'
@@ -44,20 +45,46 @@ class App extends Component {
         this.getPoi = this.getPoi.bind(this);
         this.handleclick = this.handleclick.bind(this);
         this.fileUpload = this.fileUpload.bind(this);
+        this.cusSave = this.cusSave.bind(this);
+        this.changeName = this.changeName.bind(this);
+        this.storeTypeChange = this.storeTypeChange.bind(this);
+        this.changeTel = this.changeTel.bind(this);
+        this.change = this.change.bind(this);
+        this.changeAddr = this.changeAddr.bind(this);
         this.yyzz = {};
         this.wdzp = [];
+        this.formData = {};
     }
-    change() {
-        // console.log(1)
+    componentDidMount() {
+        this.formData['StorePhoto'] = _user.customer.StorePhoto || [];
+        let area = {
+            province: _user.customer.province,
+            provinceId: _user.customer.provinceId,
+            city: _user.customer.city,
+            cityId: _user.customer.cityId,
+            area: _user.customer.area,
+            areaId: _user.customer.areaId
+        }
+        this.area = area;
+        this.address = _user.customer.address
+        this.forceUpdate()
+    }
+
+    change(e, v) {
+        console.log(e, v, 'ev')
+        this.formData['area'] = e
+    }
+    changeAddr(e, v) {
+        this.formData['address'] = v
     }
     getChildContext() {
         return {
             getPoi: this.getPoi
         }
     }
-    getPoi(a, b, callback) {
-        console.log(1);
-        console.log(a, b)
+    getPoi(a, b, c, callback) {
+        // console.log(1);
+        console.log(a, b, c)
         // Wapi.area.get(res => {
         //     console.log(res, 'get area')
         //     let area = {
@@ -90,10 +117,22 @@ class App extends Component {
         this.area = area;
         this.address = b;
         callback();
-        this.fromData['address'] = b;
-        this.fromData['area'] = area;
+        this.formData['address'] = b;
+        this.formData['area'] = area;
+        this.formData['point'] = c
         this.forceUpdate();
 
+    }
+    changeName(e, v) {
+        // console.log(e,v,'ev')
+        this.fromData['name'] = v;
+    }
+    storeTypeChange(e, i, v) {
+        this.formData['TypeName'] = v;
+        this.forceUpdate()
+    }
+    changeTel(e, v) {
+        this.formData['tel'] = v;
     }
     handleclick(id, type) {
         let name = 'up' + id
@@ -123,7 +162,7 @@ class App extends Component {
             W.alert("抱歉，仅支持的jpg或png或者jpeg图片");
             return;
         }
-        W.loading(true, "正在上传文件，请稍等");
+        // W.loading(true, "正在上传文件，请稍等");
         let _this = this;
         var reader = new FileReader();
         reader.readAsDataURL(file);
@@ -140,23 +179,22 @@ class App extends Component {
             var image = new Image();
             image.src = data;
             image.onload = function () {
-                // var width = image.width;
-                // var height = image.height;
-                // imgData.size = width+'*'+height;
                 Wapi.file.upload(res => {
                     W.loading(false);
                     if (res && res.status_code) {
                         W.errorCode(res);
                         return;
                     }
-                    imgData.imgUrl = res.image_file_url;
+                    // imgData.imgUrl = res.image_file_url;
                     if (types == 1) {
-                        _this.small.push(imgData)
+                        // _this.small.push(imgData)
+                        _this.formData['StorePhoto'][id] = res.image_file_url
                     } else if (types === 2) {
-                        _this.big.push(imgData)
+                        // _this.big.push(imgData)
+                        _this.formData['YyzzPhoto'] = res.image_file_url
                     }
                     _this.forceUpdate();
-                    _this.showImg(imgData)
+                    // _this.showImg(imgData)
                 }, file, function (s) {
                     W.loading(true, "正在上传文件，请稍等……" + parseInt(s * 100) + '%');
                 });
@@ -164,19 +202,59 @@ class App extends Component {
 
         };
     }
+
+    cusSave() {
+        let op = {};
+        for (let k in this.formData) {
+            if (k == 'point') {
+                // op['loc']['type'] = 'Point';
+                // op['loc']['coordinates'] = [this.formData[k].lng,this.formData[k].lat]
+                op['loc'] = {
+                    type: 'Point',
+                    coordinates: [this.formData[k].lng, this.formData[k].lat]
+                }
+            } else if (k == 'area') {
+                let area = this.formData[k];
+                for (let ks in area) {
+                    op[ks] = area[ks]
+                }
+            } else {
+                op[k] = this.formData[k]
+            }
+        }
+        console.log(op, 'op')
+        op._objectId = _user.customer.objectId
+        Wapi.customer.update(res => {
+            // console.log(res)
+            // history.back()
+            Wapi.customer.get(cus => {
+                _user.customer = cus.data;
+                W.setSetting("user", _user);
+                history.back();
+            }, { objectId: _user.customer.objectId })
+        }, op)
+    }
     render() {
-        // console.log(this.area,'this.area');
+        console.log(this.formData, 'this.formData');
         let imgSrc = "http://f.kalali.cn/img/default/2017/04/19/d61189c36ed44d3f8757d3cc4f867616.jpg@800"
+        let YyzzPhoto = this.formData['YyzzPhoto'] || _user.customer.YyzzPhoto || imgSrc;
         let storeType = [{ "ID": 1, "TypeName": "影音网会员店" }, { "ID": 2, "TypeName": "音响改装店" }, { "ID": 3, "TypeName": "导航销售店" }, { "ID": 4, "TypeName": "汽车用品店" }, { "ID": 5, "TypeName": "汽车美容店" }, { "ID": 6, "TypeName": "汽车修理厂" }, { "ID": 7, "TypeName": "4S店" }, { "ID": 8, "TypeName": "汽车装潢店" }, { "ID": 9, "TypeName": "汽贸店" }, { "ID": 10, "TypeName": "技服佳" }, { "ID": 11, "TypeName": "批发商" }, { "ID": 12, "TypeName": "二手车" }, { "ID": 13, "TypeName": "汽车电子" }]
-        let storeType_ops = storeType.map((ele, index) => <MenuItem innerDivStyle={styles.menuItem} value={ele.ID} key={index} primaryText={ele.TypeName} />)
-        let noItem = []; noItem=[imgSrc,imgSrc,imgSrc,imgSrc,imgSrc,imgSrc,imgSrc,imgSrc];
-        this.wdzp.length ? noItem = this.wdzz : null;
+        let storeType_ops = storeType.map((ele, index) => <MenuItem innerDivStyle={styles.menuItem} value={ele.TypeName} key={index} primaryText={ele.TypeName} />)
+        let noItem = [imgSrc, imgSrc, imgSrc, imgSrc, imgSrc, imgSrc, imgSrc, imgSrc];
+        // this.formData['StorePhoto'].length ? noItem = this.formData['StorePhoto'] : null;
+        // this.formData['StorePhoto']?
+        let test = [0, 1]
+        if (this.formData['StorePhoto']) {
+            this.formData['StorePhoto'].forEach((ele, index) => { ele ? noItem[index] = ele : null })
+        }
+        // console.log(test,'tes')
+        // console.log(noItem)
         let item = noItem.map((ele, i) => {
             if (i <= 1) {
                 return (<li key={i}>
                     <input type="file" accept="image/*" name="img" hidden="hidden" id={'up' + i} />
                     <div className="upload-placeholder" onClick={() => this.handleclick(i, 1)}>
-                        <img src={ele||imgSrc} width='100%' />
+                        <img src={ele || imgSrc} width='100%' />
                     </div>
                     <div className="name">{'门头'}</div>
                 </li>)
@@ -184,7 +262,7 @@ class App extends Component {
                 return (<li key={i}>
                     <input type="file" accept="image/*" name="img" hidden="hidden" id={'up' + i} />
                     <div className="upload-placeholder" onClick={() => this.handleclick(i, 1)}>
-                        <img src={ele||imgSrc} width='100%' />
+                        <img src={ele || imgSrc} width='100%' />
                     </div>
                     <div className="name">{'产品'}</div>
                 </li>)
@@ -192,7 +270,7 @@ class App extends Component {
                 return (<li key={i}>
                     <input type="file" accept="image/*" name="img" hidden="hidden" id={'up' + i} />
                     <div className="upload-placeholder" onClick={() => this.handleclick(i, 1)}>
-                        <img src={ele||imgSrc} width='100%' />
+                        <img src={ele || imgSrc} width='100%' />
                     </div>
                     <div className="name">{'店内'}</div>
                 </li>)
@@ -200,7 +278,7 @@ class App extends Component {
                 return (<li key={i}>
                     <input type="file" accept="image/*" name="img" hidden="hidden" id={'up' + i} />
                     <div className="upload-placeholder" onClick={() => this.handleclick(i, 1)}>
-                        <img src={ele||imgSrc} width='100%' />
+                        <img src={ele || imgSrc} width='100%' />
                     </div>
                     <div className="name">{'工位'}</div>
                 </li>)
@@ -209,7 +287,7 @@ class App extends Component {
         // console.log(item)
         return (
             <ThemeProvider>
-                <div style={{ background: '#f7f7f7', minHeight: '100vh',fontSize:'.24rem' }}>
+                <div style={{ background: '#f7f7f7', fontSize: '.24rem' }}>
                     <div style={{ padding: 5 }}>
                         <div style={{ height: 50, background: '#2196f3', color: '#fff', lineHeight: '50px', borderRadius: '5px 5px 0 0', paddingLeft: 20 }}>{'基本信息：'}</div>
                         <div style={{ background: '#fff' }}>
@@ -217,21 +295,24 @@ class App extends Component {
                                 <span style={{ display: 'inline-block', lineHeight: '48px', float: 'left', width: '25%' }}>{'网点名称：'}</span>
                                 <TextField
                                     defaultValue={_user.customer.name}
-                                    style={{width:'auto'}}
+                                    style={{ width: '62%' }}
                                     inputStyle={styles.babel}
+                                    onChange={this.changeName}
                                 />
                             </div>
                             <div style={{ position: 'relative' }}>
-                                <span style={{ display: 'inline-block', lineHeight: '48px', float: 'left', width: '15%' }}>{'地址：'}</span>
-                                <AreaSelect onChange={this.change} value={this.area} style={{ width: '85%', display: 'inline-block' }} />
+                                <span className="addr">地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;址：</span>
+                                <AreaSelect onChange={this.change} value={this.area} style={{ width: '75%', display: 'inline-block' }} />
                                 <Position style={{ position: 'absolute', top: 12, right: 5 }} />
-                                <Input value={this.address} name='address' onChange={this.change} hintText={___.address} />
+                                <Input style={{ width: '87%' }} inputStyle={styles.babel} hintStyle={styles.babel} value={this.address} name='address' onChange={this.changeAddr} hintText={'详细地址'} />
                             </div>
                             <div>
                                 <span style={{ display: 'inline-block', lineHeight: '48px', float: 'left', width: '25%' }}>{'门店性质：'}</span>
                                 <SelectField
+                                    value={this.formData['TypeName'] || _user.customer.TypeName}
                                     style={styles.select}
                                     labelStyle={styles.babel}
+                                    onChange={this.storeTypeChange}
                                 >
                                     <MenuItem innerDivStyle={styles.menuItem} value={-1} key={-1} primaryText='选择门店性质' />
                                     {storeType_ops}
@@ -241,8 +322,9 @@ class App extends Component {
                                 <span style={{ display: 'inline-block', lineHeight: '48px', float: 'left', width: '25%' }}>{'门店电话：'}</span>
                                 <TextField
                                     defaultValue={_user.customer.tel}
-                                    style={{width:'auto'}}
+                                    style={{ width: '62%' }}
                                     inputStyle={styles.babel}
+                                    onChange={this.changeTel}
                                 />
                             </div>
                         </div>
@@ -251,19 +333,22 @@ class App extends Component {
                         <div style={{ height: 50, background: '#2196f3', color: '#fff', lineHeight: '50px', borderRadius: '5px 5px 0 0', paddingLeft: 20 }}>{'营业执照：'}</div>
                         <li style={{ height: 'auto' }}>
                             <input type="file" accept="image/*" name="img" hidden="hidden" id="up8" />
-                            <div className="upload-placeholder" onClick={() => this.handleclick(8, 1)}>
-                                <img src={imgSrc} width='100%' />
+                            <div className="upload-placeholder" onClick={() => this.handleclick(8, 2)}>
+                                <img src={YyzzPhoto} width='100%' />
                             </div>
                             <div className="name">{'营业执照'}</div>
                         </li>
                     </div>
-                    <div style={{ padding: 5 }}>
+                    <div style={{ padding: 5, marginBottom: 25 }}>
                         <div style={{ height: 50, background: '#2196f3', color: '#fff', lineHeight: '50px', borderRadius: '5px 5px 0 0', paddingLeft: 20 }}>{'网店图片：'}</div>
                         <div className="upload-img">
-                            <ul style={{listStyle:'none',padding:0}}>
+                            <ul style={{ listStyle: 'none', padding: 0 }}>
                                 {item}
                             </ul>
                         </div>
+                    </div>
+                    <div>
+                        <RaisedButton label={___.save} primary={true} labelStyle={{ fontSize: '.24rem' }} style={{ width: '100%', marginTop: '10px', position: 'fixed', bottom: 0, }} onClick={this.cusSave} labelColor='#eee' />
                     </div>
                 </div>
             </ThemeProvider>)
@@ -511,8 +596,12 @@ class Maps extends Component {
         let address1 = null;
         let address2 = null;
         let address3 = null;
+        let point = null;
+        // console.log(this.state.Pois,'pois')
+        // console.log(this.state.searchD[this.flat],'sss')
         if (this.state.Pois) {
             let addr = this.state.Pois.addressComponents
+            point = this.state.Pois.point;
             address1 = addr.province + addr.city + addr.district;
             address3 = {
                 province: addr.province,
@@ -536,8 +625,10 @@ class Maps extends Component {
                 address2 = addre + addrs.title
             }
         } else if (this.state.searchD) {
+            //    console.log(this.state.searchD[this.flat],'sss')
             let addr = this.state.searchD[this.flat].addressComponents
             let addrs = this.state.searchD[this.flat]
+            point = this.state.searchD[this.flat].point
             address1 = addr.province + addr.city + addr.district;
             address3 = {
                 province: addr.province,
@@ -557,7 +648,7 @@ class Maps extends Component {
             address2 = addre + addrs.title
         }
         console.log(address1, address2)
-        this.context.getPoi(address3, address2, this.props.back)
+        this.context.getPoi(address3, address2, point, this.props.back)
     }
 
     render() {

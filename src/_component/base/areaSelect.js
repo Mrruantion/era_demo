@@ -166,7 +166,7 @@ export default class AreaSelect extends Component {
             });
         } else {
             this.setState({
-                city: this.state.cities.find(ele => ele.id == areaId).name,
+                city: this.state.cities.find(ele => ele.id == areaId).areaName,
                 cityId: areaId,
                 areaId: -1,
             });

@@ -131,7 +131,6 @@ class Alert extends Component {
     }
 
     loading(loading_open,loading_text){
-        debugger;
         this.setState({loading_open,loading_text});
     }
 

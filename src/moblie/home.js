@@ -40,6 +40,7 @@ import AvEqualizer from 'material-ui/svg-icons/av/equalizer'
 import MapsDirectionsCar from 'material-ui/svg-icons/maps/directions-car'
 import ActionViewQuilt from 'material-ui/svg-icons/action/view-quilt'
 import ActionExtension from 'material-ui/svg-icons/action/extension'
+import AvLibraryBooks from 'material-ui/svg-icons/av/library-books'
 // import NotificationWifi from'material-ui/svg-icons/notification/wifi'
 
 import AreaSelect from '../_component/base/areaSelect';
@@ -135,10 +136,18 @@ const sty = {
 
 
 const _pages = [
-    {   /*渠道管理 */
+    {   /*门店资料 */
         href: 'store_info',
         name: '门店资料',
         icon: <ActionPermContactCalendar style={sty.icon} />
+    },{   /*渠道管理 */
+        href: 'wallet',
+        name: '我的钱包',
+        icon: <EditorMonetizationOn style={sty.icon} />
+    },{   /*渠道管理 */
+        href: 'order_list',
+        name: '我的订单',
+        icon: <AvLibraryBooks style={sty.icon} />
     },
 ]
 
