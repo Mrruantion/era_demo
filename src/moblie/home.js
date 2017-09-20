@@ -41,6 +41,7 @@ import MapsDirectionsCar from 'material-ui/svg-icons/maps/directions-car'
 import ActionViewQuilt from 'material-ui/svg-icons/action/view-quilt'
 import ActionExtension from 'material-ui/svg-icons/action/extension'
 import AvLibraryBooks from 'material-ui/svg-icons/av/library-books'
+import CommunicationBusiness from 'material-ui/svg-icons/communication/business'
 // import NotificationWifi from'material-ui/svg-icons/notification/wifi'
 
 import AreaSelect from '../_component/base/areaSelect';
@@ -66,7 +67,7 @@ const styles = {
 //加载各种字典数据,权限啊等等
 // function loadDictionary(){
 //     STORE.dispatch(user_type_act.get({useType:_user.customer.custTypeId}));//用户类型
-//     STORE.dispatch(brand_act.get({uid:_user.customer.objectId}));//品牌
+//     STORE.dispatch(brand_act.get({uid:_user.customer.objectId}));//品牌  
 //     STORE.dispatch(product_act.get({uid:_user.customer.objectId}));//品牌
 //     STORE.dispatch(department_act.get({uid:_user.customer.objectId}));//部门
 //     STORE.dispatch(role_act.get({uid:_user.customer.objectId}));//角色
@@ -148,6 +149,10 @@ const _pages = [
         href: 'order_list',
         name: '我的订单',
         icon: <AvLibraryBooks style={sty.icon} />
+    },{   /*渠道管理 */
+        href: 'product',
+        name: '服务报价',
+        icon: <CommunicationBusiness style={sty.icon} />
     },
 ]
 
