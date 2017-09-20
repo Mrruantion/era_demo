@@ -21,22 +21,16 @@ import Input from '../_component/base/input';
 import MobileChecker from '../_component/base/mobileChecker';
 import VerificationOrig from '../_component/base/verificationOrig'
 
-
+import proArray from '../test/_product'
 require('../_sass/product.scss');
 
 const thisView = window.LAUNCHER.getView();//第一句必然是获取view
-thisView.setTitle('我的订单');
+thisView.setTitle('服务报价');
 
 thisView.addEventListener('load', function () {
     ReactDOM.render(<App />, thisView);
-
-    // let rechargeView = thisView.prefetch('#recharge', 3);
-    // rechargeView.setTitle(___.recharge);
-    // ReactDOM.render(<RechargePage />, rechargeView);
-
-    // let withdrawView = thisView.prefetch('#withdraw', 3);
-    // withdrawView.setTitle(___.withdraw_cash);
-    // ReactDOM.render(<WithdrawPage />, withdrawView);
+    thisView.prefetch('product_price.js',2)
+    
 });
 
 const styles = {
@@ -67,25 +61,33 @@ class App extends Component {
     constructor(props, context) {
         super(props, context);
         this.secondProduct = this.secondProduct.bind(this);
+        this.seArr = [];
     }
 
     componentDidMount() {
+        let _this = this;
         thisView.addEventListener('show',e => {
-            console.log(e,'hhh')
+            // console.log(e,'hhh')
+            if(e.params){
+                _this.seArr = proArray.second.filter(ele => ele.ParentId == e.params.ID )
+                _this.forceUpdate();
+            }
+            
         })
         console.log(1)
     }
-    secondProduct(){
-        // thisView.goTo('./order_list.js')
+    secondProduct(data){
+        thisView.goTo('./product_price.js',data)
     }
     render() {
         let height = window.screen.height;
-        let productList = ['原车屏升级', '汽车防盗安防', '车灯', '360全景']
+        // let productList = ['原车屏升级', '汽车防盗安防', '车灯', '360全景']
+        let productList = this.seArr
         let liItem = productList.map((ele, index) => {
             return (<li key={index}>
-                <span className="span-1">{ele}</span>
+                <span className="span-1">{ele.Name}</span>
                 <span className="span-2 light">
-                    <span className="btn"><a className="g-btn" onClick={this.secondProduct}>我要合作</a></span>
+                    <span className="btn"><a className="g-btn" onClick={() => this.secondProduct(ele)}>我要合作</a></span>
                 </span>
             </li>)
         })
@@ -116,3 +118,14 @@ class App extends Component {
 function toMoneyFormat(money) {
     return money.toFixed(2);
 }
+
+
+
+// class ProductPrice extends Component {
+//     constructor(props,context){
+//         super(props,context)
+//     }
+//     render(){
+//         return(<div></div>)
+//     }
+// }

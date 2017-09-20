@@ -20,17 +20,16 @@ import AutoList from '../_component/base/autoList';
 import Input from '../_component/base/input';
 import MobileChecker from '../_component/base/mobileChecker';
 import VerificationOrig from '../_component/base/verificationOrig'
-import proArray from '../test/_product'
 
+import proArray from '../test/_product'
 require('../_sass/product.scss');
 
 const thisView = window.LAUNCHER.getView();//第一句必然是获取view
-console.log(document.currentScript.view, 'thisView')
 thisView.setTitle('服务报价');
 
 thisView.addEventListener('load', function () {
     ReactDOM.render(<App />, thisView);
-    thisView.prefetch('product_second.js',2);
+
 });
 
 const styles = {
@@ -61,23 +60,30 @@ class App extends Component {
     constructor(props, context) {
         super(props, context);
         this.secondProduct = this.secondProduct.bind(this);
+        this.seArr = [];
     }
 
     componentDidMount() {
-        console.log(proArray)
+        let _this = this;
+        thisView.addEventListener('show',e => {
+            console.log(e,'hhh')
+            _this.seArr = proArray.baojia.filter(ele => ele.ProductTypeID == e.params.ID )
+            _this.forceUpdate();
+        })
+        console.log(2)
     }
-    secondProduct(ele) {
-        // let data = {d:ele}
-        thisView.goTo('./product_second.js', ele)
+    secondProduct(){
+        // thisView.goTo('./order_list.js')
     }
     render() {
         let height = window.screen.height;
-        let productList = proArray.first;
+        // let productList = ['原车屏升级', '汽车防盗安防', '车灯', '360全景']
+        let productList = this.seArr
         let liItem = productList.map((ele, index) => {
             return (<li key={index}>
-                <span className="span-1">{ele.Name}</span>
+                <span className="span-1">{ele.ProductName}</span>
                 <span className="span-2 light">
-                    <span className="btn"><a className="g-btn" onClick={() => this.secondProduct(ele)}>我要合作</a></span>
+                    <span className="btn"><a className="g-btn" onClick={this.secondProduct}>我要合作</a></span>
                 </span>
             </li>)
         })
@@ -92,7 +98,7 @@ class App extends Component {
                     <div className="page">
                         <div className="item-list price-bill">
                             <ul>
-                                <li className="hd"><span className="span-1">一级类别</span><span className="span-2">操作</span></li>
+                                <li className="hd"><span className="span-1">产品类别</span><span className="span-2">操作</span></li>
                                 {liItem}
                             </ul>
                         </div>
