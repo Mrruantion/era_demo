@@ -1,7 +1,7 @@
 /**
  * 应用数据库定义，每做一个更改必须更改版本号
  */
-let version = 2;//版本号
+let version = 3;//版本号
 
 //地区表
 // export const area={
@@ -240,7 +240,13 @@ export const customer = {
             'type': 'String',
             'display': 'TextBox',
             'query': true,    //可查询字段
-        },
+        },{
+            'name': 'product_price',
+            'desc': '产品定价',
+            'type': 'Array',
+            'display': 'TextBox',
+            'query': true,    //可查询字段
+        }
     ],
     indexDefine: [
         {
