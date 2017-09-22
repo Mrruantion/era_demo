@@ -69,68 +69,41 @@ class AgentRegisterBox extends Component{
         W.loading(1);
         let user=this._user;
         let that=this;
-        let pid=this.props.parentId;
+        // let pid=this.props.parentId;
         let tid=getCustType();
         if(!tid){
             W.alert(___.cust_type_err);
             return;
         }
         let cust=Object.assign({},this.data,{tel:user.mobile,custTypeId:tid});
-        cust.parentId=[pid];
-        if(this.props.managerId!='none'){
-            let strMng=this.props.managerId+'in'+this.props.parentId;
-            cust.parentMng=[strMng];
-        }
+        // cust.parentId=[pid];
+        // if(this.props.managerId!='none'){
+        //     let strMng=this.props.managerId+'in'+this.props.parentId;
+        //     cust.parentMng=[strMng];
+        // }
 
         let token=user.access_token;
         cust.access_token=token;
         cust.uid=user.uid;
-        cust.isInstall=_g.isInstall==1?1:0;
-        cust.appId=WiStorm.config.objectId;
+        // cust.isInstall=_g.isInstall==1?1:0;
+        // cust.appId=WiStorm.config.objectId;
 
-        Wapi.custType.get(type=>{
-            cust.custType=type.data.name;
+        // Wapi.custType.get(type=>{
+            // cust.custType=type.data.name;
             Wapi.customer.add(function(res){
                 cust.objectId=res.objectId;
                 user.customer=cust;
-                if(_g.Authorize === '3'){ //给印刷客户授权扫码代理权限
-                    Wapi.authorize.add(auth => {
-                        // console.log('印刷客户授权') 
-                        Wapi.customer.update(cus => {
-                            // console.log('印刷客户授权')
-                        },{
-                            _objectId:res.objectId,
-                            Authorize:'+3'
-                        })  
-                    },{
-                        access_token:token,
-                        authorizeType:3,
-                        applyCompanyId:res.objectId,
-                        applyCompanyName:cust.name,
-                        applyUserName:cust.contact,
-                        actProductId: 4,
-                        status:1
-                    })
-                }
-                Wapi.role.update(function(role){
-                    W.loading();
-                    user._code=0;
-                    that.props.success(user);
-                },{
-                    access_token:token,
-                    _objectId:type.data.roleId,
-                    users:'+"'+cust.uid+'"'
-                })
+                that.props.success(user);
             },cust);
-            Wapi.user.updateMe(null,{
-                _sessionToken:user.session_token,
-                access_token:token,
-                userType:type.data.userType
-            });
-        },{
-            id:tid,
-            access_token:token
-        });
+            // Wapi.user.updateMe(null,{
+            //     _sessionToken:user.session_token,
+            //     access_token:token,
+            //     userType:type.data.userType
+            // });
+        // },{
+        //     id:tid,
+        //     access_token:token
+        // });
     }
     handleNext(res){
         W.loading(1);
@@ -202,9 +175,10 @@ class AgentRegisterBox extends Component{
 
 class AgentShowBox extends Component{
     render(){
-        let box=(_user && (_g.custType !== '10'))||(_user && (_g.custType !== '11'))?
-            <JoinBox success={this.props.success} parentId={this.props.parentId} managerId={this.props.managerId}/>:
-            <AgentRegisterBox success={this.props.success} parentId={this.props.parentId} managerId={this.props.managerId} key='register' />;
+        // let box=(_user && (_g.custType !== '10'))||(_user && (_g.custType !== '11'))?
+        //     <JoinBox success={this.props.success} parentId={this.props.parentId} managerId={this.props.managerId}/>:
+        //     <AgentRegisterBox success={this.props.success} parentId={this.props.parentId} managerId={this.props.managerId} key='register' />;
+        let box = <AgentRegisterBox success={this.props.success} key='register' />
         return (
             <div>
                 <h4 style={{textAlign:'center'}}>{_g.name}</h4>
@@ -278,69 +252,29 @@ function customerCheck(user,that,nullCallback){
         if(cust.data){//如果有，则校验类型
             user.customer=cust.data;
             if(_g.custType === '10' || user.customer.custTypeId==getCustType()){//判断类型
-                if(_g.custType === '10' && !((user.user_type === 5 || user.user_type === 2 || user.user_type === 4))) {// 已注册扫码代理商
-                    W.loading();
-                    user._code=3;
-                    that.props.success(user);  
-                    //没有父级或者不包含该邀约注册的父级时
-                }else if(!user.customer.parentId||!user.customer.parentId.includes(that.props.parentId.toString())){
-                    let params={
-                        access_token:user.access_token,
-                        _objectId:user.customer.objectId,
-                        parentId:'+"'+that.props.parentId+'"',
-                    };
-                    if(that.props.managerId!='none'){
-                        params.parentMng='+"'+that.props.managerId+'in'+that.props.parentId+'"'
-                    }
-                    Wapi.customer.update(res=>{
-                        W.loading();
-                        //给代理商经销商品牌商发送印刷客户邀约添加扫码挪车权限
-                        if(_g.custType === '10' && (user.user_type === 5 || user.user_type === 2 || user.user_type === 4)){
-                            // Wapi.authorize.add(auth => {
-                            // // console.log('印刷客户授权') 
-                            //     Wapi.customer.update(cus => {
-                            //     },{
-                            //         _objectId:user.customer.objectId,
-                            //         Authorize:'+3'
-                            //     })  
-                            // },{
-                            //     access_token:user.token,
-                            //     authorizeType:3,
-                            //     applyCompanyId:user.customer.objectId,
-                            //     applyCompanyName:user.customer.name,
-                            //     applyUserName:user.customer.contact,
-                            //     actProductId: 4,
-                            //     status:1
-                            // })        
-                                   
-                        }
-                        user._code=0;
-                        that.props.success(user);
-                    },params);
-                }else{
-                    W.loading();
-                    //给代理商经销商品牌商发送印刷客户邀约添加扫码挪车权限
-                    if (_g.custType === '10' && (user.user_type === 5 || user.user_type === 2 || user.user_type === 4)) {
-                        // Wapi.authorize.add(auth => {
-                        //     // console.log('印刷客户授权') 
-                        //     Wapi.customer.update(cus => {
-                        //     }, {
-                        //             _objectId: user.customer.objectId,
-                        //             Authorize: '+3'
-                        //         })
-                        // }, {
-                        //     access_token: user.token,
-                        //     authorizeType: 3,
-                        //     applyCompanyId: user.customer.objectId,
-                        //     applyCompanyName: user.customer.name,
-                        //     applyUserName: user.customer.contact,
-                        //     actProductId: 4,
-                        //     status: 1
-                        // })
-                    }                    
+                // if(_g.custType === '10' && !((user.user_type === 5 || user.user_type === 2 || user.user_type === 4))) {// 已注册扫码代理商
+                //     W.loading();
+                //     user._code=3;
+                //     that.props.success(user);  
+                //     //没有父级或者不包含该邀约注册的父级时
+                // }else if(!user.customer.parentId||!user.customer.parentId.includes(that.props.parentId.toString())){
+                //     let params={
+                //         access_token:user.access_token,
+                //         _objectId:user.customer.objectId,
+                //         parentId:'+"'+that.props.parentId+'"',
+                //     };
+                //     if(that.props.managerId!='none'){
+                //         params.parentMng='+"'+that.props.managerId+'in'+that.props.parentId+'"'
+                //     }
+                //     Wapi.customer.update(res=>{
+                //         W.loading();
+                //         user._code=0;
+                //         that.props.success(user);
+                //     },params);
+                // }else{                   
                     user._code=0;
                     that.props.success(user);
-                }
+                // }
             }else{//不是，则提示类型不正确，返回登录
                 W.loading();
                 user._code=2;

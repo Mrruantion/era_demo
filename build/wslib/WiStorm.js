@@ -10,7 +10,7 @@ window._user;
 window._g;
 
 //执行错误直接弹出
-window.onerror = function(msg, url, l) {
+window.onerror = function (msg, url, l) {
     var flie = self.location.href.split(/[\\\/.]/);
     var flieName = flie[flie.length - 2];
     url = url.split(/[\\\/.]/);
@@ -37,7 +37,7 @@ window.onerror = function(msg, url, l) {
         }
         var errorJson = { "bug_report": text, "account": account };
         if (typeof Wapi == "object") { //如果已经加载了api文件，则直接发送错误
-            Wapi.crash.add(function(res) {}, errorJson);
+            Wapi.crash.add(function (res) { }, errorJson);
         } else { //否则存在本地，等Wapi加载完会自动发送
             var errorLog = localStorage.getItem("errorList");
             var errorList;
@@ -56,7 +56,7 @@ window.onerror = function(msg, url, l) {
         }
     }
 }
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     //处理记录在本地的错误日志
     var __errorLog = localStorage.getItem("errorList");
     var __errorList;
@@ -64,8 +64,8 @@ window.addEventListener('load', function() {
         try {
             __errorList = JSON.parse(__errorLog);
             for (var __i = 0; __i < __errorList.length; __i++) {
-                if(Wapi){
-                    Wapi.crash.add(function(res) {}, __errorList[__i]);
+                if (Wapi) {
+                    Wapi.crash.add(function (res) { }, __errorList[__i]);
                 }
             }
             localStorage.removeItem("errorList");
@@ -84,7 +84,7 @@ window.addEventListener('load', function() {
  */
 
 if (typeof Object.assign != 'function') {
-    Object.assign = function(target) {
+    Object.assign = function (target) {
         if (target == null) {
             throw new TypeError('Cannot convert undefined or null to object');
         }
@@ -109,7 +109,7 @@ if (!Array.prototype.find) {
         enumerable: false,
         configurable: true,
         writable: true,
-        value: function(predicate) {
+        value: function (predicate) {
             if (this == null) {
                 throw new TypeError('Array.prototype.find called on null or undefined');
             }
@@ -135,7 +135,7 @@ if (!Array.prototype.find) {
 }
 
 if (!Array.prototype.includes) {
-    Array.prototype.includes = function(searchElement /*, fromIndex*/ ) {
+    Array.prototype.includes = function (searchElement /*, fromIndex*/) {
         'use strict';
         var O = Object(this);
         var len = parseInt(O.length) || 0;
@@ -164,7 +164,7 @@ if (!Array.prototype.includes) {
 }
 
 if (!String.prototype.includes) {
-    String.prototype.includes = function(search, start) {
+    String.prototype.includes = function (search, start) {
         'use strict';
         if (typeof start !== 'number') {
             start = 0;
@@ -206,10 +206,10 @@ W.version = "1.0";
 /**
  * 空方法，用于需要空方法的地方，免得每次都创建
  */
-W.noop = function() {};
+W.noop = function () { };
 
 
-W.debug = function(str) {
+W.debug = function (str) {
     if (WiStorm.debug)
         alert(str);
 };
@@ -219,7 +219,7 @@ W.debug = function(str) {
  * 日期的toString方法扩展，输出更符合普通格式的字符串
  * @param {Date} d
  */
-W.dateToString = function(d) {
+W.dateToString = function (d) {
     var j = {};
     j.m = d.getMonth() + 1;
     j.d = d.getDate();
@@ -238,7 +238,7 @@ W.dateToString = function(d) {
  * 兼容ios的字符串转日期对象
  * @param {String} str
  */
-W.date = function(str) {
+W.date = function (str) {
     var date = new Date();
     if (!str)
         return date;
@@ -271,12 +271,12 @@ W.date = function(str) {
  * @param {String} url  文件路径
  * @param {Function} callback 加载完成之后的回调方法
  */
-W.include = function(url, callback, errorCall) {
+W.include = function (url, callback, errorCall) {
     var script = document.createElement("script");
     script.src = url;
     if (WiStorm.included.indexOf(script.src) != -1) {
         script.src = null;
-        setTimeout(function() { callback(true) }, 0);
+        setTimeout(function () { callback(true) }, 0);
         return;
     }
     script.onload = callback;
@@ -300,7 +300,7 @@ W.include = function(url, callback, errorCall) {
  * script>link("mui.css")</script>
  * </head>
  */
-W.link = function(cssName) {
+W.link = function (cssName) {
     var skinFolder = W.getSkin();
     var pathName = WiStorm.root + 'skin/' + skinFolder + '/' + cssName;
     var l = document.createElement('link');
@@ -315,7 +315,7 @@ W.link = function(cssName) {
  * @param {String} url
  * @param {Object} options，具体可参考http://dev.dcloud.net.cn/mui/ajax/
  */
-W.ajax = function(url, options) {
+W.ajax = function (url, options) {
     var json = {
         dataType: "json",
         timeout: 10000,
@@ -350,12 +350,12 @@ W.ajax = function(url, options) {
     xmlhttp.responseType = json.dataType || 'json';
     if (json.timeout > 0) {
         xmlhttp.timeout = json.timeout;
-        xmlhttp.ontimeout = function() {
+        xmlhttp.ontimeout = function () {
             json.error(xmlhttp, 'timeout', json);
         }
     }
 
-    xmlhttp.onreadystatechange = function() {
+    xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4) {
             xmlhttp.onreadystatechange = W.noop;
             if ((xmlhttp.status >= 200 && xmlhttp.status < 300) || xmlhttp.status === 304 || xmlhttp.status === 0) {
@@ -384,14 +384,14 @@ W.ajax = function(url, options) {
  * @param {Function} success
  * @param {String} dataType
  */
-W.get = function(url, data, success, dataType) {
+W.get = function (url, data, success, dataType) {
     var options = {
         data: data,
         dataType: dataType, //服务器返回json格式数据
         type: 'get', //HTTP请求类型
         timeout: 10000, //超时时间设置为10秒；
         success: success,
-        error: function(xhr, type, errorThrown) {
+        error: function (xhr, type, errorThrown) {
             console.log(type + "___url:" + url);
         }
     };
@@ -405,14 +405,14 @@ W.get = function(url, data, success, dataType) {
  * @param {Function} success
  * @param {String} dataType
  */
-W.post = function(url, data, success, dataType) {
+W.post = function (url, data, success, dataType) {
     var options = {
         data: data,
         dataType: dataType, //服务器返回json格式数据
         type: 'post', //HTTP请求类型
         timeout: 10000, //超时时间设置为10秒；
         success: success,
-        error: function(xhr, type, errorThrown) {
+        error: function (xhr, type, errorThrown) {
             console.log(type + "___url:" + url);
         }
     };
@@ -425,14 +425,14 @@ W.post = function(url, data, success, dataType) {
  * @param {Object} data
  * @param {Function} success
  */
-W.getJSON = function(url, data, success) {
+W.getJSON = function (url, data, success) {
     var options = {
         data: data,
         dataType: "json",
         type: 'get',
         timeout: 10000,
         success: success,
-        error: function(xhr, type, errorThrown) {
+        error: function (xhr, type, errorThrown) {
             console.log(type + "___url:" + url);
         }
     };
@@ -444,7 +444,7 @@ W.getJSON = function(url, data, success) {
  * @param {String} key
  * @return {String}
  */
-W.getSetting = function(key) {
+W.getSetting = function (key) {
     return WiStorm.setting[key];
 }
 
@@ -453,7 +453,7 @@ W.getSetting = function(key) {
  * @param {String} key
  * @param {Object} val
  */
-W.setSetting = function(key, val) {
+W.setSetting = function (key, val) {
     WiStorm.setting[key] = val;
     localStorage.setItem("_WiStormUserSetting_", JSON.stringify(WiStorm.setting));
 }
@@ -463,7 +463,7 @@ W.setSetting = function(key, val) {
  * @param {String} name
  * @param {Boolean} notJson
  */
-W.ls = function(name, notJson) {
+W.ls = function (name, notJson) {
     var r = localStorage.getItem(name);
     if (r && r != "") {
         if (notJson) {
@@ -484,7 +484,7 @@ W.ls = function(name, notJson) {
  * @param {Object} val
  * @param {Boolean} notJson
  */
-W.setLS = function(name, val, notJson) {
+W.setLS = function (name, val, notJson) {
     if (notJson)
         localStorage.setItem(name, val);
     else
@@ -498,7 +498,7 @@ W.setLS = function(name, val, notJson) {
  * var test=W.getSearch();
  * alert(test.w);
  */
-W.getSearch = function() {
+W.getSearch = function () {
     var url = location.search;
     if (!url) return {};
     url = url.split("?")[1].split("&");
@@ -517,7 +517,7 @@ W.getSearch = function() {
  * @param {Number} expiredays
  * @param {String} path
  */
-W.setCookie = function(c_name, value, expiredays, path) {
+W.setCookie = function (c_name, value, expiredays, path) {
     var exdate = new Date();
     expiredays = expiredays || 1; //默认为1天
     if (expiredays > 1)
@@ -540,7 +540,7 @@ W.setCookie = function(c_name, value, expiredays, path) {
  * 获取cookie
  * @param {String} c_name
  */
-W.getCookie = function(c_name) {
+W.getCookie = function (c_name) {
     if (document.cookie.length > 0) {
         c_start = document.cookie.indexOf(c_name + "=");
         if (c_start != -1) {
@@ -553,7 +553,7 @@ W.getCookie = function(c_name) {
 }
 
 //重新加载用户设置
-W._getSeting = function() {
+W._getSeting = function () {
     var setting = localStorage.getItem("_WiStormUserSetting_");
     try {
         if (setting)
@@ -566,7 +566,7 @@ W._getSeting = function() {
     delete setting;
 }
 
-W.logout = function(param) {
+W.logout = function (param) {
     W.setCookie("access_token", "");
     W.setSetting("user", null);
     // 2017-03-31 删除公众号对应的用户信息
@@ -576,17 +576,17 @@ W.logout = function(param) {
     top.location = WiStorm.root + 'index.html?intent=logout' + param + '&r=' + Math.random();
 }
 
-W.wxLogin = function(s) {
+W.wxLogin = function (s) {
     // W.setCookie("access_token", "");
     // W.setSetting("user", null);
     // 2017-03-31 删除公众号对应的用户信息
     // W.setSetting("user" + WiStorm.config.wx_app_id, null);
     var state = s || 'sso_login';
     var wx_app_id = _g.wx_app_id;
-    if(WiStorm.config.wx_app_id && WiStorm.config.wx_app_id !== 'undefined'){
+    if (WiStorm.config.wx_app_id && WiStorm.config.wx_app_id !== 'undefined') {
         wx_app_id = WiStorm.config.wx_app_id;
-    }else if(W.getSetting('wx_app_id') && W.getSetting('wx_app_id') !== 'undefined'){
-        wx_app_id =W.getSetting('wx_app_id');
+    } else if (W.getSetting('wx_app_id') && W.getSetting('wx_app_id') !== 'undefined') {
+        wx_app_id = W.getSetting('wx_app_id');
     }
     if (WiStorm.test_mode) {
         var url = WiStorm.config.wx_login; //测试使用
@@ -596,11 +596,11 @@ W.wxLogin = function(s) {
     } else {
         W.setCookie("__login_redirect_uri__", location.href, -15);
         var u = encodeURIComponent(WiStorm.config.wx_login);
-        top.location = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +wx_app_id + "&redirect_uri=" + u + "&response_type=code&scope=snsapi_base&state=" + state + "#wechat_redirect";
+        top.location = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + wx_app_id + "&redirect_uri=" + u + "&response_type=code&scope=snsapi_base&state=" + state + "#wechat_redirect";
     }
 }
 
-W.emit = function(taget, event, params, canBubble, cancelable) {
+W.emit = function (taget, event, params, canBubble, cancelable) {
     var evt = document.createEvent("HTMLEvents");
     evt.initEvent(event, canBubble, cancelable);
     evt.params = params;
@@ -611,7 +611,7 @@ W.emit = function(taget, event, params, canBubble, cancelable) {
  * 静默授权获取open_id
  * 如果想限定某页面只能在微信下打开，则可以通过指定needweixin参数为true来实现
  */
-W.getOpenId = function(needweixin, s) {
+W.getOpenId = function (needweixin, s) {
     if (needweixin || !WiStorm.agent.weixin) return;
     s = s || "getOpenId";
     W.setCookie("__login_redirect_uri__", location.href, -15);
@@ -624,7 +624,7 @@ W.getOpenId = function(needweixin, s) {
  * 输出api返回的错误信息
  * @param {Object} code
  */
-W.errorCode = function(json) {
+W.errorCode = function (json) {
     if (!json.status_code) return;
     W.loading ? W.loading() : null;
     if (json.status_code == 3) {
@@ -666,30 +666,30 @@ W.errorCode = function(json) {
 
     }
 }
-function bodyfram(text){
+function bodyfram(text) {
     var ifs = document.getElementById('ssfra');
-    if(!ifs){
+    if (!ifs) {
         var i = document.createElement('iframe');
-        i.src = WiStorm.root+'err.html?'+text;
+        i.src = WiStorm.root + 'err.html?' + text;
         i.id = 'ssfra'
         i.style.display = 'block';
         i.style.height = '100vh';
         i.style.width = '100%';
         i.style.border = '0';
         i.style.position = 'absolute';
-        i.style.top = '0' ;
+        i.style.top = '0';
         i.style.zIndex = '9999';
         document.body.appendChild(i);
-    }else{
+    } else {
         return false
     }
 }
 /**
  * 简单处理api返回错误信息
  */
-W.err = function(fun) {
+W.err = function (fun) {
     if (typeof fun !== 'function') {
-        return function(res) {
+        return function (res) {
             console.log(res);
             if (res.status_code) {
                 W.errorCode(res);
@@ -697,7 +697,7 @@ W.err = function(fun) {
             }
         }
     } else
-        return function(res) {
+        return function (res) {
             if (res.status_code) {
                 W.errorCode(res);
                 return;
@@ -706,36 +706,36 @@ W.err = function(fun) {
         }
 }
 
-W.checkIfLogin = function(callback){
+W.checkIfLogin = function (callback) {
     //http://wx.autogps.cn/server_api.php?openId=oV8WEwm3Iq_zl5YtDVkBvy8KJ2bM&method=checkIfLogin
-    var url = 'https://wx.autogps.cn/server_api.php?openId=' + W.getSetting('openId') +'&method=checkIfLogin';
-    W.getJSON(url, {}, function(json){
-        if(json.status_code === 1){
-            var loginUrl = WiStorm.root + 'index.html?intent=logout&logout=true&wx_app_id=' + W.getSetting('wx_app_id')  +'&r=' + Math.random() + '&openid='+W.getSetting('openId')+'&state=getOpenId';
+    var url = 'https://wx.autogps.cn/server_api.php?openId=' + W.getSetting('openId') + '&method=checkIfLogin';
+    W.getJSON(url, {}, function (json) {
+        if (json.status_code === 1) {
+            var loginUrl = WiStorm.root + 'index.html?intent=logout&logout=true&wx_app_id=' + W.getSetting('wx_app_id') + '&r=' + Math.random() + '&openid=' + W.getSetting('openId') + '&state=getOpenId';
             top.location = loginUrl;
         }
         return callback();
     });
 }
 
-W.activityTimeout = function(callback){
+W.activityTimeout = function (callback) {
     //http://wx.autogps.cn/server_api.php?openId=oV8WEwm3Iq_zl5YtDVkBvy8KJ2bM&method=checkIfLogin
-    var url = 'https://wx.autogps.cn/server_api.php?activityId=' + _g.activityId +'&method=activityTimeout';
-    W.getJSON(url, {}, function(json){
-        if(!json.data || json.data.status_code === 0){
+    var url = 'https://wx.autogps.cn/server_api.php?activityId=' + _g.activityId + '&method=activityTimeout';
+    W.getJSON(url, {}, function (json) {
+        if (!json.data || json.data.status_code === 0) {
             var errorUrl = WiStorm.root + 'action_timeout.html';
             top.location = errorUrl;
-        }else{
-            if(!_g.action){
+        } else {
+            if (!_g.action) {
                 var url = location.href
-                    +'&action='+encodeURIComponent(json.data.url)
-                    +'&title='+encodeURIComponent(json.data.name)
-                    +'&seller_name='+encodeURIComponent(json.data.sellerType)
-                    +'&mobile='+json.data.tel
-                    +'&agent_tel='+json.data.tel
-                    +'&wxAppKey='+json.data.wxAppKey;
-                top.location = url;  
-            }        
+                    + '&action=' + encodeURIComponent(json.data.url)
+                    + '&title=' + encodeURIComponent(json.data.name)
+                    + '&seller_name=' + encodeURIComponent(json.data.sellerType)
+                    + '&mobile=' + json.data.tel
+                    + '&agent_tel=' + json.data.tel
+                    + '&wxAppKey=' + json.data.wxAppKey;
+                top.location = url;
+            }
         }
         return callback();
     });
@@ -743,14 +743,14 @@ W.activityTimeout = function(callback){
 
 
 
-W.login = function() {
+W.login = function () {
     if (_g.sso_login && _g.access_token) { //已经授权
         //登录成功
         W.setSetting("openId", _g.openid);
         W.setCookie("access_token", _g.access_token, 1);
     }
 }
-W._loginSuccess = function(res) {
+W._loginSuccess = function (res) {
     W._login = true; //表示已登录
     _user = res;
     W.setSetting("user", res);
@@ -761,8 +761,8 @@ W._loginSuccess = function(res) {
     W.setSetting("user" + WiStorm.config.wx_app_id, res);
 }
 
-W.toRegister = function() {
-    W.alert("没有帐号或者未启用，请先注册", function() {
+W.toRegister = function () {
+    W.alert("没有帐号或者未启用，请先注册", function () {
         W.setCookie("__login_redirect_uri__", location.href, -60);
         var reg = /src\/baba\/\S*\.html.*/;
         var url = location.href;
@@ -774,15 +774,15 @@ W.toRegister = function() {
     });
 }
 
-W.replace = function(text, data) {
+W.replace = function (text, data) {
     data = data || ___;
-    return text.replace(/(\<|&lt;)\%.*?\%(&gt;|\>)/g, function(word) {
+    return text.replace(/(\<|&lt;)\%.*?\%(&gt;|\>)/g, function (word) {
         word = word.replace(/(\<|&lt;|&gt;|\>|%)/g, '');
         return data[word] || '';
     });
 }
 
-var getScriptRequest = function() {
+var getScriptRequest = function () {
     var urlparse;
     urlparse = document.scripts[document.scripts.length - 1].src.split("\?");
     var parms = urlparse[1].split("&");
@@ -801,7 +801,7 @@ var getScriptRequest = function() {
  * @param {Function} fun
  * @param {Boolean} web
  */
-W.plusReady = function(fun, web) {
+W.plusReady = function (fun, web) {
     if (web) {
         if (window.plus)
             setTimeout(fun, 0);
@@ -829,8 +829,8 @@ W.fixPath = function () {
 window._g = W.getSearch();
 
 var WiStorm_root = "http://" + location.host + "/";
-if(location.protocol=="https:"){
-	WiStorm_root="https://"+location.host+"/";
+if (location.protocol == "https:") {
+    WiStorm_root = "https://" + location.host + "/";
 }
 
 if (location.host.indexOf('localhost') == -1 && !location.host.match(/(192\.|127\.)/))
@@ -850,6 +850,7 @@ window.WiStorm = {
         "wx_ticket_url": location.origin + "/WX.TokenAndTicket.php?action=ticket",
         "wx_sdk": "https://res.wx.qq.com/open/js/jweixin-1.0.0.js",
         "wx_login": location.origin + "/oauth2.php",
+        'map': 'BAIDU',
         languages: ['zh-cn', 'en-us'],
         domain: {
             'wx': 'wx.autogps.cn',
@@ -858,11 +859,11 @@ window.WiStorm = {
             'wowx': 'wx.wo365.net'
         }
         // domain:{
-		// 	'wx':'wx.autogps.chease.cn',
-		// 	'user':'user.autogps.chease.cn',
-		// 	'wo':'w.wo365.chease.cn',
-		// 	'wxwo':'wx.wo365.chease.cn'
-		// }
+        // 	'wx':'wx.autogps.chease.cn',
+        // 	'user':'user.autogps.chease.cn',
+        // 	'wo':'w.wo365.chease.cn',
+        // 	'wxwo':'wx.wo365.chease.cn'
+        // }
     },
     setting: {}, //用户设置，由W.getSetting(name)和W.setSetting(key,val)操作
     included: [], //当前页面使用include(url)来包含的文件名
@@ -913,8 +914,8 @@ try {
         // var loc = encodeURIComponent((location.origin + location.pathname).replace(WiStorm.root, ''));
         // loc = (loc == 'index.html') ? '' : '&location=' + loc;
         // location = location.origin + (location.search || '?') + loc;
-        var wxId = _g.wx_app_id ? _g.wx_app_id: W.getSetting("wx_app_id") || WiStorm.config.wx_app_id;
-        W.logout('&logout=true&needOpenId=true&wx_app_id='+wxId);
+        var wxId = _g.wx_app_id ? _g.wx_app_id : W.getSetting("wx_app_id") || WiStorm.config.wx_app_id;
+        W.logout('&logout=true&needOpenId=true&wx_app_id=' + wxId);
     }
 }
 keys = undefined;
@@ -923,7 +924,7 @@ if (_g.wx_app_id && _g.wx_app_id !== 'undefined') {
     WiStorm.config.wx_app_id = _g.wx_app_id;
     WiStorm.config.wx_login = WiStorm.config.wx_login + '?wx_app_id=' + WiStorm.config.wx_app_id;
 } else {
-    if(W.getSetting("wx_app_id") && W.getSetting("wx_app_id") !== 'undefined'){
+    if (W.getSetting("wx_app_id") && W.getSetting("wx_app_id") !== 'undefined') {
         WiStorm.config.wx_app_id = W.getSetting("wx_app_id") || WiStorm.config.wx_app_id;
     }
     WiStorm.config.wx_login = WiStorm.config.wx_login + '?wx_app_id=' + WiStorm.config.wx_app_id;
@@ -965,7 +966,7 @@ if (!W._login && location.pathname.indexOf("index.html") < 0 && _g.intent != "lo
         top.location = WiStorm.root + "index.html?r=" + Math.random();
     }
 } else if (W._login) {
-    window.addEventListener("load", function() {
+    window.addEventListener("load", function () {
         var evt = document.createEvent("HTMLEvents");
         evt.initEvent("W.loginSuccess", false, false); //当页面load事件触发并且已经登录成功则会触发该事件,用于某些需要不经过登录页也可以直接访问，但是又需要用户授权登录的页面
         window.dispatchEvent(evt);
@@ -973,8 +974,8 @@ if (!W._login && location.pathname.indexOf("index.html") < 0 && _g.intent != "lo
 }
 
 // 如果为活动页面，则判断活动是否无效，无效则跳到出错界面
-if (location.pathname.indexOf("action.html") > -1){
-    W.activityTimeout(function(){});
+if (location.pathname.indexOf("action.html") > -1) {
+    W.activityTimeout(function () { });
 }
 
 //获取语言资源
