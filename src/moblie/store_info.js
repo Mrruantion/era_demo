@@ -423,11 +423,12 @@ class Maps extends Component {
     //初始化定位/拖拽
     mapinit() {
         this.flat = -1;
-        this.map = new WMap("allmap");
+        this.map = new WMap.Map("allmap");
         var myGeo = new WMap.Geocoder();
         this.setState({ searchD: null })
         if (WiStorm.agent.mobile) {
             // alert(1)
+            console.log(this.map,'map')
             this.map.addControl(new WMap.NavigationControl({ type: BMAP_NAVIGATION_CONTROL_ZOOM, anchor: BMAP_ANCHOR_BOTTOM_RIGHT, offset: new WMap.Size(5, 20) }));//添加缩放控件
         } else {
             this.map.enableScrollWheelZoom();//启用滚轮放大缩小
