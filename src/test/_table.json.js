@@ -1,7 +1,7 @@
 /**
  * 应用数据库定义，每做一个更改必须更改版本号
  */
-let version = 3;//版本号
+let version = 4;//版本号
 
 //地区表
 // export const area={
@@ -255,14 +255,128 @@ export const customer = {
         },
     ]
 }
-
+//员工表
+export const employee={
+    name: 'employee',             //表名
+    desc: '人员表',             //表描述
+    type: 1,             //类型(0:基础表, 1:用户表)
+    isApi: true,           //是否开放API
+    isPrivate: false,       //是否隐私数据, 如果是调用API时需要访问令牌
+    isCache: true,         //数据是否启用缓存
+    cacheField: 'updatedAt',       //缓存日期字段
+    fieldDefine: [
+        {
+            'name': 'uid',
+            'desc': '用户id',
+            'type': 'String',
+            'display': 'TextBox',
+            'primary': true,  //主键字段
+            'query': true,    //可查询字段
+            'validations': {
+                required:true
+            },
+            'messages': {
+                required:'用户id为必填'
+            }
+        },
+        {
+            'name': 'companyId',
+            'desc': '公司id',
+            'type': 'String',
+            'display': 'TextBox',
+            'query': true,    //可查询字段
+            'validations': {
+                required:true
+            },
+            'messages': {
+                required:'公司id为必填'
+            }
+        },
+        {
+            'name': 'isQuit',
+            'desc': '是否离职',
+            'type': 'Boolean',
+            'query': true    //可查询字段
+        },
+        {
+            'name': 'quitDate',
+            'desc': '离职时间',
+            'type': 'Date',
+            'query': true    //可查询字段
+        },
+        {
+            'name': 'name',
+            'desc': '姓名',
+            'type': 'String',
+            'display': 'TextBox',
+            'query': true,    //可查询字段
+            'validations': {
+                required:true
+            },
+            'messages': {
+                required:'姓名为必填'
+            }
+        },
+        {
+            'name': 'sex',
+            'desc': '性别',
+            'type': 'Number',
+            'display': 'TextBox',
+            'query': true    //可查询字段
+        },
+        {
+            'name': 'idcard',
+            'desc': '身份证',
+            'type': 'String',
+            'display': 'TextBox',
+            'query': true    //可查询字段
+        },
+        {
+            'name': 'tel',
+            'desc': '电话',
+            'type': 'String',
+            'display': 'TextBox',
+            'query': true    //可查询字段
+        },
+        {
+            'name': 'email',
+            'desc': '邮箱',
+            'type': 'String',
+            'display': 'TextBox',
+            'query': true    //可查询字段
+        },
+        {
+            'name': 'wechat',
+            'desc': '微信号',
+            'type': 'String',
+            'display': 'TextBox',
+            'query': true    //可查询字段
+        },
+        {
+            'name': 'type',
+            'desc': '人员类型（0默认，1编外人员，如兼职营销）',
+            'type': 'Number',
+            'query': true,
+        }
+    ],
+    indexDefine: [
+        {
+            uid:1,
+            unique:true
+        },
+        {idcard:1},
+        {tel:1},
+        {wechat:1},
+        {email:1},
+    ]
+}
 // let TABLES=[
 //     area,customer,custType,department,employee,vehicle,iotDevice,iotGpsData,iotLog
 //     ,brand,product,deviceTotal,deviceLog,iotStat,iotCommand,iotAlert,booking,activity,
 //     weixin,qrData,activityProduct,qrDistribution,qrLink,authorize,promotion
 // ];
 let TABLES = [
-    customer
+    employee
 ]
 let old_vareion = localStorage.getItem('table.json.js.version');
 localStorage.setItem('table.json.js.version', version);

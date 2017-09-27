@@ -10,38 +10,12 @@ import ReactDOM from 'react-dom';
 import { ThemeProvider } from '../_theme/default';
 import { Tabs, Tab } from 'material-ui/Tabs';
 
-import ActionSupervisorAccount from 'material-ui/svg-icons/action/supervisor-account';
-import ActionAccountCircle from 'material-ui/svg-icons/action/account-circle';
-import ActionWork from 'material-ui/svg-icons/action/work';
-import ActionPermIdentity from 'material-ui/svg-icons/action/perm-identity';
-import HardwareKeyboard from 'material-ui/svg-icons/hardware/keyboard';
-import ActionRecordVoiceOver from 'material-ui/svg-icons/action/record-voice-over';
-import ActionHome from 'material-ui/svg-icons/action/home';
-import ActionAssignmentInd from 'material-ui/svg-icons/action/assignment-ind';
-import ActionTurnedInNot from 'material-ui/svg-icons/action/turned-in-not';
-import ActionViewList from 'material-ui/svg-icons/action/view-list';
-import ActionFace from 'material-ui/svg-icons/action/face';
-import ToggleStar from 'material-ui/svg-icons/toggle/star';
-import CommunicationContacts from 'material-ui/svg-icons/communication/contacts';
-import ContentSort from 'material-ui/svg-icons/content/sort';
-import AvFeaturedPlayList from 'material-ui/svg-icons/av/featured-play-list';
-import AvRecentActors from 'material-ui/svg-icons/av/recent-actors';
 import ActionPermContactCalendar from 'material-ui/svg-icons/action/perm-contact-calendar';
-import ActionEvent from 'material-ui/svg-icons/action/event';
-import ImageHdrStrong from 'material-ui/svg-icons/image/hdr-strong';
-import HardwareDeviceHub from 'material-ui/svg-icons/hardware/device-hub';
-import ActionInfoOutline from 'material-ui/svg-icons/action/info-outline';
-import ActionTrendingUp from 'material-ui/svg-icons/action/trending-up';
 import EditorMonetizationOn from 'material-ui/svg-icons/editor/monetization-on';
-import ActionShopTwo from 'material-ui/svg-icons/action/shop-two';
-import ImageFilterCenterFocus from 'material-ui/svg-icons/image/filter-center-focus';
-import ActionSettings from 'material-ui/svg-icons/action/settings';
-import AvEqualizer from 'material-ui/svg-icons/av/equalizer'
-import MapsDirectionsCar from 'material-ui/svg-icons/maps/directions-car'
-import ActionViewQuilt from 'material-ui/svg-icons/action/view-quilt'
-import ActionExtension from 'material-ui/svg-icons/action/extension'
 import AvLibraryBooks from 'material-ui/svg-icons/av/library-books'
 import CommunicationBusiness from 'material-ui/svg-icons/communication/business'
+import ImageBlurOn from 'material-ui/svg-icons/image/blur-on'
+import SocialPersonOutline from 'material-ui/svg-icons/social/person-outline'
 // import NotificationWifi from'material-ui/svg-icons/notification/wifi'
 
 import AreaSelect from '../_component/base/areaSelect';
@@ -141,21 +115,32 @@ const _pages = [
         href: 'store_info',
         name: '门店资料',
         icon: <ActionPermContactCalendar style={sty.icon} />
-    },{   /*渠道管理 */
+    },{   /*我的钱包 */
         href: 'wallet',
         name: '我的钱包',
         icon: <EditorMonetizationOn style={sty.icon} />
-    },{   /*渠道管理 */
+    },{   /*我的订单 */
         href: 'order_list',
         name: '我的订单',
         icon: <AvLibraryBooks style={sty.icon} />
-    },{   /*渠道管理 */
+    },{   /*服务报价 */
         href: 'product',
         name: '服务报价',
         icon: <CommunicationBusiness style={sty.icon} />
+    },{   /*员工管理 */
+        href: 'employee_manage',
+        name: '员工管理',
+        icon: <SocialPersonOutline style={sty.icon} />
     },
 ]
 
+const _pages2 = [
+    {   /*二维码管理 */
+        href: 'qrCode_manage',
+        name: '二维码管理',
+        icon: <ImageBlurOn style={sty.icon} />
+    }
+]
 
 class App extends Component {
     constructor(props, context) {
@@ -171,7 +156,8 @@ class App extends Component {
         thisView.goTo(tab.props.value+'.js');
     }
     render() {
-        const cards = _pages.map(e => (<ModuleCard title={e.name} icon={e.icon} href={e.href} key={e.href} />));
+        let pages = _user.customer.custTypeId == 1 ? _pages2 : _user.customer.custTypeId == 5 ? _pages : []
+        const cards = pages.map(e => (<ModuleCard title={e.name} icon={e.icon} href={e.href} key={e.href} />));
         return (
             <ThemeProvider>
                 <div style={sty.main}>

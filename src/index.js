@@ -32,7 +32,7 @@ class App extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            active: (_g.register == 'true' && _g.parentId) ? 1 : 0 //0,登录；1，注册；2，忘记密码；3，更改绑定openid
+            active: (_g.register == 'true') ? 1 : 0 //0,登录；1，注册；2，忘记密码；3，更改绑定openid
         }
         // this.state.active=4;
         this.loginSuccess = this.loginSuccess.bind(this);
@@ -50,7 +50,7 @@ class App extends Component {
             this.setTitle(this.state.active);
     }
     setTitle(i) {
-        var _title = _g.custType === '10' ? '账号注册' : ___.invite_regist;
+        var _title = '账号注册';
         let titles = [___.login, _title, ___.forget_pwd, ___.logined_bind, _title];
         setTitle(titles[i]);
     }
@@ -69,20 +69,8 @@ class App extends Component {
             }
         }
         W.loading(1);
-        {/* W._loginSuccess(user);
-        this.finishLogin(); */}
         this.getCustomer(user)
-        {/* if (user.userType == 9) { //如果是员工
-            let that = this;
-            Wapi.employee.get(res => {
-                user.employee = res.data;
-                this.getCustomer(user);
-            }, {
-                uid: user.uid,
-                access_token: user.access_token
-            })
-        } else
-            this.getCustomer(user); */}
+        
     }
     getCustomer(user) {
         let that = this;
@@ -91,52 +79,10 @@ class App extends Component {
             access_token: token,
             uid: user.uid
         };
-        {/* if (user.employee) {
-            cust_data.objectId = user.employee.companyId;
-        } else {
-            cust_data.uid = user.uid;
-        } */}
         Wapi.customer.get(function (cust) {
             user.customer = cust.data;
             W._loginSuccess(user);
             that.finishLogin();
-            {/* let _uid = user.uid; */ }
-            {/* if (!user.customer) {
-                W.loading();
-                W.alert(___.not_allow_login);
-                return;
-            } */}
-            {/* Wapi.role.list(function(role) {
-                user.role = role.data;
-                let acl = _uid;
-                if (user.role && user.role.length)
-                    acl += '|role:' + user.role.map(r => r.objectId).join('|role:');
-                Wapi.page.list(function(page) {
-                    if (!page.data || !page.data.length) { //没有任何页面的权限，说明不是这个平台的用户
-                        W.loading();
-                        W.alert(___.not_allow_login);
-                        return;
-                    }
-                    if (user.customer.custTypeId == 8 && user.customer.isInstall == 0) {
-                        //没有经销商权限的服务商，去除供应商管理，库存管理，营销产品
-                        let arr = [793281718504263700, 773357884795916300, 803882340127477800];
-                        user.pages = page.data.filter(ele => !arr.includes(ele.objectId));
-                    } else {
-                        user.pages = page.data;
-                    }
-                    console.log(page.data);
-                    // user.pages=page.data;
-                    W._loginSuccess(user);
-                    that.finishLogin();
-                }, {
-                    access_token: token,
-                    ACL: acl,
-                    appId: CONFIG.objectId
-                });
-            }, {
-                users: _uid,
-                access_token: token
-            }); */}
         }, cust_data);
     }
 
@@ -234,7 +180,7 @@ class App extends Component {
         {/* console.log(this.state.active,'what is the active') */ }
         let actives = [
             <Login onSuccess={this.loginSuccess} style={login_sty} ssoLoginFail={this.showBind} />,
-            <AgentShowBox success={this.registerCallback} parentId={_g.parentId} managerId={_g.managerId || 'none'} />,
+            <AgentShowBox success={this.registerCallback} />,
             <Forget onSuccess={this.forgetSuccess} user={this._res ? this._res.data : null} />,
             <BindBox onSuccess={this.loginSuccess} openId={_g.openid} />,
             <QrBox />

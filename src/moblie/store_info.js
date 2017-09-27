@@ -254,7 +254,7 @@ class App extends Component {
                 return (<li key={i}>
                     <input type="file" accept="image/*" name="img" hidden="hidden" id={'up' + i} />
                     <div className="upload-placeholder" onClick={() => this.handleclick(i, 1)}>
-                        <img src={ele || imgSrc} width='100%' />
+                        <img src={ele || imgSrc} width='100%' height="100%"/>
                     </div>
                     <div className="name">{'门头'}</div>
                 </li>)
@@ -262,7 +262,7 @@ class App extends Component {
                 return (<li key={i}>
                     <input type="file" accept="image/*" name="img" hidden="hidden" id={'up' + i} />
                     <div className="upload-placeholder" onClick={() => this.handleclick(i, 1)}>
-                        <img src={ele || imgSrc} width='100%' />
+                        <img src={ele || imgSrc} width='100%' height="100%"/>
                     </div>
                     <div className="name">{'产品'}</div>
                 </li>)
@@ -270,7 +270,7 @@ class App extends Component {
                 return (<li key={i}>
                     <input type="file" accept="image/*" name="img" hidden="hidden" id={'up' + i} />
                     <div className="upload-placeholder" onClick={() => this.handleclick(i, 1)}>
-                        <img src={ele || imgSrc} width='100%' />
+                        <img src={ele || imgSrc} width='100%' height="100%"/>
                     </div>
                     <div className="name">{'店内'}</div>
                 </li>)
@@ -278,7 +278,7 @@ class App extends Component {
                 return (<li key={i}>
                     <input type="file" accept="image/*" name="img" hidden="hidden" id={'up' + i} />
                     <div className="upload-placeholder" onClick={() => this.handleclick(i, 1)}>
-                        <img src={ele || imgSrc} width='100%' />
+                        <img src={ele || imgSrc} width='100%' height="100%"/>
                     </div>
                     <div className="name">{'工位'}</div>
                 </li>)
@@ -294,6 +294,7 @@ class App extends Component {
                             <div>
                                 <span style={{ display: 'inline-block', lineHeight: '48px', float: 'left', width: '25%' }}>{'网点名称：'}</span>
                                 <TextField
+                                    name="custName"
                                     defaultValue={_user.customer.name}
                                     style={{ width: '62%' }}
                                     inputStyle={styles.babel}
@@ -321,6 +322,7 @@ class App extends Component {
                             <div>
                                 <span style={{ display: 'inline-block', lineHeight: '48px', float: 'left', width: '25%' }}>{'门店电话：'}</span>
                                 <TextField
+                                    name="tel"
                                     defaultValue={_user.customer.tel}
                                     style={{ width: '62%' }}
                                     inputStyle={styles.babel}
@@ -334,7 +336,7 @@ class App extends Component {
                         <li style={{ height: 'auto' }}>
                             <input type="file" accept="image/*" name="img" hidden="hidden" id="up8" />
                             <div className="upload-placeholder" onClick={() => this.handleclick(8, 2)}>
-                                <img src={YyzzPhoto} width='100%' />
+                                <img src={YyzzPhoto} width='100%' height="100%"/>
                             </div>
                             <div className="name">{'营业执照'}</div>
                         </li>
