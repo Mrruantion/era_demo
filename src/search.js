@@ -266,7 +266,7 @@ class Install extends Component {
                 </div>
                 <div style={{ height: 40 }}>
                     <span style={{ display: 'inline-block', lineHeight: '40px', float: 'left' }}>{'安装价格：'}</span>
-                    <Input onChange={(e,v) => {console.log(e,v)}} value={product[this.state.menuVal].ContractPrice} style={{fontSize:'.256rem',height:40,lineHeight:'20px',marginTop:0,width:'auto'}} inputStyle={{top:0}} name="price"/>
+                    <Input onChange={(e,v) => {console.log(e,v)}} value={product[this.state.menuVal].ContractPrice} style={{fontSize:'.256rem',height:40,lineHeight:'20px',marginTop:0,width:'120px'}} inputStyle={{top:0}} name="price"/>
                 </div>
                 <div>
                     <span style={{ display: 'inline-block', lineHeight: '40px' }}>{'预约时间：'}</span>
