@@ -1,7 +1,7 @@
 /**
  * 应用数据库定义，每做一个更改必须更改版本号
  */
-let version = 4;//版本号
+let version = 5;//版本号
 
 //地区表
 // export const area={
@@ -370,13 +370,82 @@ export const employee={
         {email:1},
     ]
 }
+
+//二维码与活动映射表
+export const qrLink={
+    name: 'qrLink',             //表名
+    desc: '二维码与活动映射表',             //表描述
+    type: 1,             //类型(0:基础表, 1:用户表)
+    isApi: true,           //是否开放API
+    isPrivate: true,       //是否隐私数据, 如果是调用API时需要访问令牌
+    isCache: true,         //数据是否启用缓存
+    isUpdate: false,      //是否更新数据表
+    cacheField: 'updatedAt',       //缓存日期字段
+    fieldDefine: [
+        {
+            'name': 'id',
+            'desc': '二维码id',
+            'type': 'String',
+            'query': true,
+        },{
+            'name': 'url',
+            'desc': '分享链接',
+            'type': 'String',
+            'query': true,
+        },{
+            'name': 'sellerId',
+            'desc': '营销人员id',
+            'type': 'String',
+            'query': true,
+        },{
+            'name': 'act',
+            'desc': '活动id',
+            'type': 'String',
+            'query': true,
+        },{
+            'name': 'i',
+            'desc': '数据id',
+            'type': 'Number',
+            'default':'@AutoInc',
+            'query': true, 
+        },{
+            'name': 'type',
+            'desc': '类型',//0普通短链接，1营销资料，2移车卡，3活动分享链接，4渠道注册链接，5人员注册链接
+            'type': 'Number',//同一个批次的二维码type相同
+            'query': true,
+        },{
+            'name':'batchId',
+            'desc':'批次id',
+            'type':'String',
+            'query':true
+        },{
+            'name':'batchName',
+            'desc':'批次名称',
+            'type':'String',
+            'query':true
+        },{
+            'name':'status',//已绑定为1，未绑定为0，方便统计
+            'desc':'状态',//统计用
+            'type':'Number',
+            'query':true
+        },{
+            'name':'uid',
+            'desc':'所属客户',//当前用户所属公司ID
+            'type':'String',
+            'query':true
+        }
+    ],
+    indexDefine: [
+        {uid:1}
+    ]
+}
 // let TABLES=[
 //     area,customer,custType,department,employee,vehicle,iotDevice,iotGpsData,iotLog
 //     ,brand,product,deviceTotal,deviceLog,iotStat,iotCommand,iotAlert,booking,activity,
 //     weixin,qrData,activityProduct,qrDistribution,qrLink,authorize,promotion
 // ];
 let TABLES = [
-    employee
+    qrLink
 ]
 let old_vareion = localStorage.getItem('table.json.js.version');
 localStorage.setItem('table.json.js.version', version);
