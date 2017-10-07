@@ -93,17 +93,23 @@ class App extends Component {
             width: 250,     // 信息窗口宽度
             height: 200,     // 信息窗口高度
         }
-        data.forEach(ele => {
+        let productArr = []
+        data.forEach((ele, index) => {
+            ele.product_price.forEach(e => e.ID == _g.productId ? productArr.push(ele) : null)
+        })
+        console.log(productArr, 'productArr')
+        // let productArr = data.filter(ele => ele.product_price)
+        productArr.forEach(ele => {
             var point = new BMap.Point(ele.loc.coordinates[0], ele.loc.coordinates[1]);
-            let product = ele.product_price.filter(ele => ele.ID == 504832 )
+            let product = ele.product_price.filter(ele => ele.ID == _g.productId)
             var mk = new WMap.Marker(point);
             this.map.addOverlay(mk);
             var sContent = "<div>" +
                 "<h4 style='margin:0 0 5px 0;padding:0.2em 0'>店铺：" + ele.name + "</h4>" +
-                "<div style='margin:0 0 5px 0;padding:0.2em 0'><span>产品类别：</span>"+
-                "<span>"+product[0].ProductName+"</span></div>"+
-                "<div style='margin:0 0 5px 0;padding:0.2em 0'><span>产品价格：</span>"+
-                "<span>"+product[0].ContractPrice+"</span></div>"+
+                "<div style='margin:0 0 5px 0;padding:0.2em 0'><span>产品类别：</span>" +
+                "<span>" + product[0].ProductName + "</span></div>" +
+                "<div style='margin:0 0 5px 0;padding:0.2em 0'><span>产品价格：</span>" +
+                "<span>" + product[0].ContractPrice + "</span></div>" +
                 "<h5 style='margin:0 0 5px 0;padding:0.2em 0'>服务说明：</h5>" +
                 "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'>哈哈哈哈啊哈哈哈哈哈...</p>" +
                 "</div>";
@@ -182,20 +188,20 @@ class Install extends Component {
             autoOk: false,
             disableYearSelection: false,
             value24: new Date(),
-            menuVal: 0,
-            account:null,
-            valid_code:null,
+            menuVal: parseInt(_g.productId),
+            account: null,
+            valid_code: null,
         };
         this.changeDate = this.changeDate.bind(this);
         this.handleChangeTimePicker24 = this.handleChangeTimePicker24.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.accountChange = this.accountChange.bind(this);
         this.change = this.change.bind(this);
-        this.formData={
-            mobile:null,
-            valid_code:null,
-            valid_type:1,
-            password:null,
+        this.formData = {
+            mobile: null,
+            valid_code: null,
+            valid_type: 1,
+            password: null,
         };
     }
     changeDate(e, date) {
@@ -205,37 +211,37 @@ class Install extends Component {
         console.log(date, 'date')
         this.setState({ value24: date });
     };
-    handleChange(e, v) {
+    handleChange(e, i, v) {
         this.setState({ menuVal: v })
     }
     //输入手机号码
-    accountChange(e){
+    accountChange(e) {
         // console.log(reg.test(val))
         // let reg=/^[1][3578][0-9]{9}$/;
         let val = e.target.value
         var reg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0]{1})|(n15[0-3]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         console.log(reg.test(val))
-        if(reg.test(val)){
+        if (reg.test(val)) {
             console.log(true)
-            this.formData['mobile']=val;  
-            this.setState({account:val}); 
-        }else{
-            this.setState({account:null}); 
-            if(val.length == 11){
+            this.formData['mobile'] = val;
+            this.setState({ account: val });
+        } else {
+            this.setState({ account: null });
+            if (val.length == 11) {
                 // console.log(1)
                 W.alert('请输入正确的手机号码')
             }
         }
     }
     //输入验证码
-    change(val,name){
-        console.log(val,name)
-        if(val){
-            this.setState({valid_code:val})
-        }else{
-            this.setState({valid_code:null})
+    change(val, name) {
+        console.log(val, name)
+        if (val) {
+            this.setState({ valid_code: val })
+        } else {
+            this.setState({ valid_code: null })
         }
-        this.formData[name]=val;
+        this.formData[name] = val;
     }
     render() {
         console.log(this.formData)
@@ -243,12 +249,15 @@ class Install extends Component {
         // console.log(this.props.data)
         let disabled = true
         let height = window.screen.height;
-        let product = this.props.data.product_price||[];
-        let item = product.map((ele, index) => <MenuItem value={index} key={index} primaryText={ele.ProductName} />)
-
+        let product = this.props.data.product_price || [];
+        console.log(this.state.menuVal, 'menuVal')
+        let item = product.map((ele, index) => <MenuItem value={ele.ID} key={index} primaryText={ele.ProductName} />)
+        console.log(this.state.menuVal, 'menuVal')
+        let price = product.filter(ele => ele.ID == this.state.menuVal)
+        console.log(price, 'price')
         return (<div style={{ minHeight: height, background: "#f7f7f7" }}>
-            <h4 style={{ fontSize: '0.30rem', margin: 0, padding: 0, textAlign: 'center',lineHeight:'0.7rem',color:'#fff',background:'#2196f3' }}>{'预约安装'}</h4>
-            <div style={{ fontSize: '.256rem', padding: '10px 10px 0', backgroundColor: '#fff'  }}>
+            <h4 style={{ fontSize: '0.30rem', margin: 0, padding: 0, textAlign: 'center', lineHeight: '0.7rem', color: '#fff', background: '#2196f3' }}>{'预约安装'}</h4>
+            <div style={{ fontSize: '.256rem', padding: '10px 10px 0', backgroundColor: '#fff' }}>
                 <div style={{ height: 40 }}>
                     <span style={{ display: 'inline-block', lineHeight: '40px', float: 'left' }}>{'预约服务：'}</span>
                     <DropDownMenu
@@ -266,7 +275,7 @@ class Install extends Component {
                 </div>
                 <div style={{ height: 40 }}>
                     <span style={{ display: 'inline-block', lineHeight: '40px', float: 'left' }}>{'安装价格：'}</span>
-                    <Input onChange={(e,v) => {console.log(e,v)}} value={product[this.state.menuVal].ContractPrice} style={{fontSize:'.256rem',height:40,lineHeight:'20px',marginTop:0,width:'120px'}} inputStyle={{top:0}} name="price"/>
+                    <Input onChange={(e, v) => { console.log(e, v) }} value={price[0].ContractPrice} style={{ fontSize: '.256rem', height: 40, lineHeight: '20px', marginTop: 0, width: '120px' }} inputStyle={{ top: 0 }} name="price" />
                 </div>
                 <div>
                     <span style={{ display: 'inline-block', lineHeight: '40px' }}>{'预约时间：'}</span>
@@ -292,7 +301,7 @@ class Install extends Component {
                         />
                     </span>
                 </div>
-                
+
             </div>
             <div style={{ backgroundColor: '#fff' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-end', padding: '3px 10px', borderBottom: '1px solid #dddddd' }}>
@@ -308,14 +317,14 @@ class Install extends Component {
                     <VerificationCode
                         name='valid_code'
                         type={1}
-                        account={this.state.account} 
+                        account={this.state.account}
                         onSuccess={this.change}
                         onChange={this.change}
                         style={{ width: '100%' }}
                     />
                 </div>
             </div>
-            <div style={{ fontSize: '.26rem',textAlign:'center',marginTop:30}}>
+            <div style={{ fontSize: '.26rem', textAlign: 'center', marginTop: 30 }}>
                 <RaisedButton disabled={disabled} label={'确认预约'} primary={true} labelStyle={{ fontSize: '.24rem' }} style={{}} onClick={this.cusSave} labelColor='#eee' />
             </div>
         </div>)
