@@ -53,7 +53,7 @@ thisView.setTitle("闪装时代");
 thisView.addEventListener('load', function () {
     ReactDOM.render(<App />, thisView);
     if (_g.loginLocation) {
-        thisView.goTo(_g.loginLocation+'.js');
+        thisView.goTo(_g.loginLocation + '.js');
     }
     // thisView.prefetch('./myMarketing/marketing_data.js',2);
     // thisView.prefetch('./myAccount/my_order.js',2);
@@ -115,19 +115,19 @@ const _pages = [
         href: 'store_info',
         name: '门店资料',
         icon: <ActionPermContactCalendar style={sty.icon} />
-    },{   /*我的钱包 */
+    }, {   /*我的钱包 */
         href: 'wallet',
         name: '我的钱包',
         icon: <EditorMonetizationOn style={sty.icon} />
-    },{   /*我的订单 */
+    }, {   /*我的订单 */
         href: 'order_list',
         name: '我的订单',
         icon: <AvLibraryBooks style={sty.icon} />
-    },{   /*服务报价 */
+    }, {   /*服务报价 */
         href: 'product',
         name: '服务报价',
         icon: <CommunicationBusiness style={sty.icon} />
-    },{   /*员工管理 */
+    }, {   /*员工管理 */
         href: 'employee_manage',
         name: '员工管理',
         icon: <SocialPersonOutline style={sty.icon} />
@@ -141,7 +141,13 @@ const _pages2 = [
         icon: <ImageBlurOn style={sty.icon} />
     }
 ]
-
+const _pages3 = [
+    {   /*二维码管理 */
+        href: 'employee_orderList',
+        name: '我的订单',
+        icon: <ImageBlurOn style={sty.icon} />
+    }
+]
 class App extends Component {
     constructor(props, context) {
         super(props, context)
@@ -149,14 +155,14 @@ class App extends Component {
     }
     getChildContext() {
         return {
-            view:thisView
+            view: thisView
         };
     }
-    go(tab){
-        thisView.goTo(tab.props.value+'.js');
+    go(tab) {
+        thisView.goTo(tab.props.value + '.js');
     }
     render() {
-        let pages = _user.customer.custTypeId == 1 ? _pages2 : _user.customer.custTypeId == 5 ? _pages : []
+        let pages = _user.customer ? _user.customer.custTypeId == 1 ? _pages2 : _user.customer.custTypeId == 5 ? _pages : [] : _pages3
         const cards = pages.map(e => (<ModuleCard title={e.name} icon={e.icon} href={e.href} key={e.href} />));
         return (
             <ThemeProvider>

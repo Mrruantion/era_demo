@@ -133,11 +133,11 @@ class EmployeeRegisterBox extends Component {
     }
     registerSuccess(res) {
         let user = res;
-        if (user.status_code) {
-            //已注册用户，不能再注册了
-            W.alert(___.error[user.status_code]);
-            return;
-        }
+        // if (user.status_code) {
+        //     //已注册用户，不能再注册了
+        //     W.alert(___.error[user.status_code]);
+        //     return;
+        // }
         W.loading(true);
         let that = this;
         let defaultData = {
@@ -159,15 +159,18 @@ class EmployeeRegisterBox extends Component {
             Wapi.employee.add(function (res) {
                 emp.objectId = res.objectId;
                 user.employee = emp;
-                Wapi.role.update(function (role) {
-                    W.loading();
-                    user._code = 0;
-                    that.props.success(user);
-                }, {
-                        access_token: token,
-                        _objectId: emp.roleId,
-                        users: '+"' + emp.uid + '"'
-                    });
+                W.loading();
+                user._code = 0;
+                that.props.success(user);
+                // Wapi.role.update(function (role) {
+                //     W.loading();
+                //     user._code = 0;
+                //     that.props.success(user);
+                // }, {
+                //         access_token: token,
+                //         _objectId: emp.roleId,
+                //         users: '+"' + emp.uid + '"'
+                //     });
             }, emp);
             Wapi.user.updateMe(null, {
                 _sessionToken: user.session_token,

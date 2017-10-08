@@ -69,7 +69,18 @@ class App extends Component {
             }
         }
         W.loading(1);
-        this.getCustomer(user)
+        if (user.userType == 9) { //如果是员工
+            let that = this;
+            Wapi.employee.get(res => {
+                user.employee = res.data;
+                this.getCustomer(user);
+            }, {
+                uid: user.uid,
+                access_token: user.access_token
+            })
+        } else
+            this.getCustomer(user);
+        // this.getCustomer(user)
         
     }
     getCustomer(user) {
