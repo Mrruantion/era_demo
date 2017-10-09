@@ -1,7 +1,7 @@
 /**
  * 应用数据库定义，每做一个更改必须更改版本号
  */
-let version = 5;//版本号
+let version = 6;//版本号
 
 //地区表
 // export const area={
@@ -240,12 +240,24 @@ export const customer = {
             'type': 'String',
             'display': 'TextBox',
             'query': true,    //可查询字段
-        },{
+        }, {
             'name': 'product_price',
             'desc': '产品定价',
             'type': 'Array',
             'display': 'TextBox',
             'query': true,    //可查询字段
+        }, {
+            'name': 'declare',
+            'desc': '服务说明',
+            'type': 'String',
+            'display': 'TextBox',
+            'query': true,    //可查询字段
+        }, {
+            'name': 'sex',
+            'desc': '性别',
+            'type': 'Number',
+            'display': 'TextBox',
+            'query': true    //可查询字段
         }
     ],
     indexDefine: [
@@ -256,7 +268,7 @@ export const customer = {
     ]
 }
 //员工表
-export const employee={
+export const employee = {
     name: 'employee',             //表名
     desc: '人员表',             //表描述
     type: 1,             //类型(0:基础表, 1:用户表)
@@ -273,10 +285,10 @@ export const employee={
             'primary': true,  //主键字段
             'query': true,    //可查询字段
             'validations': {
-                required:true
+                required: true
             },
             'messages': {
-                required:'用户id为必填'
+                required: '用户id为必填'
             }
         },
         {
@@ -286,10 +298,10 @@ export const employee={
             'display': 'TextBox',
             'query': true,    //可查询字段
             'validations': {
-                required:true
+                required: true
             },
             'messages': {
-                required:'公司id为必填'
+                required: '公司id为必填'
             }
         },
         {
@@ -311,10 +323,10 @@ export const employee={
             'display': 'TextBox',
             'query': true,    //可查询字段
             'validations': {
-                required:true
+                required: true
             },
             'messages': {
-                required:'姓名为必填'
+                required: '姓名为必填'
             }
         },
         {
@@ -361,18 +373,18 @@ export const employee={
     ],
     indexDefine: [
         {
-            uid:1,
-            unique:true
+            uid: 1,
+            unique: true
         },
-        {idcard:1},
-        {tel:1},
-        {wechat:1},
-        {email:1},
+        { idcard: 1 },
+        { tel: 1 },
+        { wechat: 1 },
+        { email: 1 },
     ]
 }
 
 //二维码与活动映射表
-export const qrLink={
+export const qrLink = {
     name: 'qrLink',             //表名
     desc: '二维码与活动映射表',             //表描述
     type: 1,             //类型(0:基础表, 1:用户表)
@@ -387,56 +399,56 @@ export const qrLink={
             'desc': '二维码id',
             'type': 'String',
             'query': true,
-        },{
+        }, {
             'name': 'url',
             'desc': '分享链接',
             'type': 'String',
             'query': true,
-        },{
+        }, {
             'name': 'sellerId',
             'desc': '营销人员id',
             'type': 'String',
             'query': true,
-        },{
+        }, {
             'name': 'act',
             'desc': '活动id',
             'type': 'String',
             'query': true,
-        },{
+        }, {
             'name': 'i',
             'desc': '数据id',
             'type': 'Number',
-            'default':'@AutoInc',
-            'query': true, 
-        },{
+            'default': '@AutoInc',
+            'query': true,
+        }, {
             'name': 'type',
             'desc': '类型',//0普通短链接，1营销资料，2移车卡，3活动分享链接，4渠道注册链接，5人员注册链接
             'type': 'Number',//同一个批次的二维码type相同
             'query': true,
-        },{
-            'name':'batchId',
-            'desc':'批次id',
-            'type':'String',
-            'query':true
-        },{
-            'name':'batchName',
-            'desc':'批次名称',
-            'type':'String',
-            'query':true
-        },{
-            'name':'status',//已绑定为1，未绑定为0，方便统计
-            'desc':'状态',//统计用
-            'type':'Number',
-            'query':true
-        },{
-            'name':'uid',
-            'desc':'所属客户',//当前用户所属公司ID
-            'type':'String',
-            'query':true
+        }, {
+            'name': 'batchId',
+            'desc': '批次id',
+            'type': 'String',
+            'query': true
+        }, {
+            'name': 'batchName',
+            'desc': '批次名称',
+            'type': 'String',
+            'query': true
+        }, {
+            'name': 'status',//已绑定为1，未绑定为0，方便统计
+            'desc': '状态',//统计用
+            'type': 'Number',
+            'query': true
+        }, {
+            'name': 'uid',
+            'desc': '所属客户',//当前用户所属公司ID
+            'type': 'String',
+            'query': true
         }
     ],
     indexDefine: [
-        {uid:1}
+        { uid: 1 }
     ]
 }
 // let TABLES=[
@@ -445,7 +457,7 @@ export const qrLink={
 //     weixin,qrData,activityProduct,qrDistribution,qrLink,authorize,promotion
 // ];
 let TABLES = [
-    qrLink
+    customer
 ]
 let old_vareion = localStorage.getItem('table.json.js.version');
 localStorage.setItem('table.json.js.version', version);

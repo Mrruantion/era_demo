@@ -4,10 +4,15 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import SonPage from '../_component/base/sonPage'
 import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+
+
 // import { ThemeProvider } from '../_theme/default'
 import { ThemeProvider } from '../_theme/default';
 import QrImg from '../_component/base/qrImg';
-import {changeToLetter} from '../_modules/tool';
+import { changeToLetter } from '../_modules/tool';
+
+
 
 const thisView = window.LAUNCHER.getView();
 thisView.setTitle('二维码管理')
@@ -41,14 +46,16 @@ class App extends Component {
             v2Arr: [],
             v3: 0,
             v3Arr: [],
-            show: false
+            show: false,
         }
         this.selectFirst = this.selectFirst.bind(this);
         this.selectSecond = this.selectSecond.bind(this);
         this.selectThirst = this.selectThirst.bind(this);
         this.submit = this.submit.bind(this);
-        this.hide = this.hide.bind(this);
+        this.InstallMess = this.InstallMess.bind(this);
+        // this.hide = this.hide.bind(this);
         this.data = {}
+        this.message = null;
     }
     componentDidMount() {
         let v1Arr = proArray.first;
@@ -64,34 +71,41 @@ class App extends Component {
     selectThirst(e, i, v) {
         this.setState({ v3: v })
     }
-    hide() {
-        this.setState({ show: false })
-    }
+    // hide() {
+    //     this.setState({ show: false })
+    // }
     submit() {
         this.setState({ show: true })
         // this.data = { sUrl: 'http://baidu.com' }
-        let url = WiStorm.root + 'search.html?productId=' + this.state.v3.ID
-        let qrLinkData={
-            url:url,
-            type:4,
-            uid:_user.customer.objectId,
-            i:0
+        let url = WiStorm.root + 'search.html?intent=logout&productId=' + this.state.v3.ID
+            + '&sellerId=' + _user.customer.objectId
+            + '&InstallMess=' + this.message
+        let qrLinkData = {
+            url: url,
+            type: 4,
+            uid: _user.customer.objectId,
+            i: 0
         }
-        Wapi.qrLink.add(res=>{
-            Wapi.qrLink.get(r=>{
-                let id=changeToLetter(r.data.i);
-                this.data.sUrl='https://t.autogps.cn/?s='+id;
-                Wapi.qrLink.update(()=>{
+        Wapi.qrLink.add(res => {
+            Wapi.qrLink.get(r => {
+                let id = changeToLetter(r.data.i);
+                this.data.sUrl = 'https://t.autogps.cn/?s=' + id;
+                Wapi.qrLink.update(() => {
                     W.loading(false);
                     // this.qrHide=false;
                     this.forceUpdate();
-                },{
-                    _objectId:res.objectId,
-                    id:id
-                });
-            },{objectId:res.objectId});
-        },qrLinkData);
+                }, {
+                        _objectId: res.objectId,
+                        id: id
+                    });
+            }, { objectId: res.objectId });
+        }, qrLinkData);
         // this.data = { sUrl: url }
+    }
+    InstallMess(e, v) {
+        // console.log(e,v)
+        // this.setState({ message: v })
+        this.message = v
     }
     render() {
         let v1item = this.state.v1Arr.map((ele, index) => <MenuItem innerDivStyle={styles.menuItem} value={ele.ID} key={index} primaryText={ele.Name} />)
@@ -105,9 +119,9 @@ class App extends Component {
         v3item.unshift(<MenuItem innerDivStyle={styles.menuItem} value={0} key={-1} primaryText={'安装内容'} />);
         return (
             <ThemeProvider>
-                <div style={{ fontSize: '0.256rem' }}>
-                    <div style={{ textAlign: 'center' }}>
-                        <h3>选择生成二维码</h3>
+                <div style={{ fontSize: '0.256rem', padding: '0 5px' }}>
+                    <div style={{ textAlign: 'center', padding: 10 }}>
+                        <h3 style={{ margin: 0 }}>选择生成二维码</h3>
                     </div>
                     <SelectField
                         value={this.state.v1}
@@ -144,7 +158,18 @@ class App extends Component {
                         {/* {area_options} */}
                         {v3item}
                     </SelectField>
-                    <div style={{ textAlign: 'center', position: 'absolute', bottom: '50%', width: '100%' }}>
+                    <div>
+                        <div style={{ lineHeight: '25px', paddingTop: 10 }}>{'安装注意事项'}</div>
+                        <TextField
+                            multiLine={true}
+                            rows={1}
+                            rowsMax={4}
+                            style={{ width: '100%' }}
+                            onChange={this.InstallMess}
+                            value={this.message}
+                        />
+                    </div>
+                    <div style={{ textAlign: 'center', position: 'absolute', bottom: '40%', width: '100%' }}>
                         <QrImg data={this.data.sUrl} style={{ display: 'inline-block', padding: 10, backgroundColor: '#fff' }} />
                     </div>
                     <div style={{ textAlign: 'center', position: 'fixed', bottom: 30, width: '100%' }}><RaisedButton disabled={this.state.v3 ? false : true} onClick={this.submit} label={'生成二维码'} primary={true} style={{ marginRight: '10px' }} /></div>

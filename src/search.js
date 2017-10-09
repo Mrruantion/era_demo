@@ -93,13 +93,13 @@ class App extends Component {
             width: 250,     // 信息窗口宽度
             height: 200,     // 信息窗口高度
         }
-        let productArr = []
+        let custOne = []
         data.forEach((ele, index) => {
-            ele.product_price.forEach(e => e.ID == _g.productId ? productArr.push(ele) : null)
+            ele.product_price.forEach(e => e.ID == _g.productId ? custOne.push(ele) : null)
         })
-        console.log(productArr, 'productArr')
-        // let productArr = data.filter(ele => ele.product_price)
-        productArr.forEach(ele => {
+        console.log(custOne, 'custOne')
+        // let custOne = data.filter(ele => ele.product_price)
+        custOne.forEach(ele => {
             var point = new BMap.Point(ele.loc.coordinates[0], ele.loc.coordinates[1]);
             let product = ele.product_price.filter(ele => ele.ID == _g.productId)
             var mk = new WMap.Marker(point);
@@ -111,7 +111,7 @@ class App extends Component {
                 "<div style='margin:0 0 5px 0;padding:0.2em 0'><span>产品价格：</span>" +
                 "<span>" + product[0].ContractPrice + "</span></div>" +
                 "<h5 style='margin:0 0 5px 0;padding:0.2em 0'>服务说明：</h5>" +
-                "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'>哈哈哈哈啊哈哈哈哈哈...</p>" +
+                "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'>"+ele.declare+"</p>" +
                 "</div>";
 
             let div = document.createElement('div');

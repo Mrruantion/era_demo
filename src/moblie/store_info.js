@@ -51,6 +51,7 @@ class App extends Component {
         this.changeTel = this.changeTel.bind(this);
         this.change = this.change.bind(this);
         this.changeAddr = this.changeAddr.bind(this);
+        this.declareMess = this.declareMess.bind(this);
         this.yyzz = {};
         this.wdzp = [];
         this.formData = {};
@@ -202,7 +203,9 @@ class App extends Component {
 
         };
     }
-
+    declareMess(e,v){
+        this.formData['declare'] = v
+    }
     cusSave() {
         let op = {};
         for (let k in this.formData) {
@@ -254,7 +257,7 @@ class App extends Component {
                 return (<li key={i}>
                     <input type="file" accept="image/*" name="img" hidden="hidden" id={'up' + i} />
                     <div className="upload-placeholder" onClick={() => this.handleclick(i, 1)}>
-                        <img src={ele || imgSrc} width='100%' height="100%"/>
+                        <img src={ele || imgSrc} width='100%' height="100%" />
                     </div>
                     <div className="name">{'门头'}</div>
                 </li>)
@@ -262,7 +265,7 @@ class App extends Component {
                 return (<li key={i}>
                     <input type="file" accept="image/*" name="img" hidden="hidden" id={'up' + i} />
                     <div className="upload-placeholder" onClick={() => this.handleclick(i, 1)}>
-                        <img src={ele || imgSrc} width='100%' height="100%"/>
+                        <img src={ele || imgSrc} width='100%' height="100%" />
                     </div>
                     <div className="name">{'产品'}</div>
                 </li>)
@@ -270,7 +273,7 @@ class App extends Component {
                 return (<li key={i}>
                     <input type="file" accept="image/*" name="img" hidden="hidden" id={'up' + i} />
                     <div className="upload-placeholder" onClick={() => this.handleclick(i, 1)}>
-                        <img src={ele || imgSrc} width='100%' height="100%"/>
+                        <img src={ele || imgSrc} width='100%' height="100%" />
                     </div>
                     <div className="name">{'店内'}</div>
                 </li>)
@@ -278,7 +281,7 @@ class App extends Component {
                 return (<li key={i}>
                     <input type="file" accept="image/*" name="img" hidden="hidden" id={'up' + i} />
                     <div className="upload-placeholder" onClick={() => this.handleclick(i, 1)}>
-                        <img src={ele || imgSrc} width='100%' height="100%"/>
+                        <img src={ele || imgSrc} width='100%' height="100%" />
                     </div>
                     <div className="name">{'工位'}</div>
                 </li>)
@@ -329,6 +332,18 @@ class App extends Component {
                                     onChange={this.changeTel}
                                 />
                             </div>
+                            <div>
+                                <div style={{ lineHeight: '25px', paddingTop: 10 }}>{'服务说明：'}</div>
+                                <TextField
+                                    name="declare"
+                                    defaultValue={_user.customer.declare}
+                                    multiLine={true}
+                                    rows={1}
+                                    rowsMax={4}
+                                    style={{ width: '100%' }}
+                                    onChange={this.declareMess}
+                                />
+                            </div>
                         </div>
                     </div>
                     <div style={{ padding: 5 }} className="upload-img1">
@@ -336,7 +351,7 @@ class App extends Component {
                         <li style={{ height: 'auto' }}>
                             <input type="file" accept="image/*" name="img" hidden="hidden" id="up8" />
                             <div className="upload-placeholder" onClick={() => this.handleclick(8, 2)}>
-                                <img src={YyzzPhoto} width='100%' height="100%"/>
+                                <img src={YyzzPhoto} width='100%' height="100%" />
                             </div>
                             <div className="name">{'营业执照'}</div>
                         </li>
@@ -430,7 +445,7 @@ class Maps extends Component {
         this.setState({ searchD: null })
         if (WiStorm.agent.mobile) {
             // alert(1)
-            console.log(this.map,'map')
+            console.log(this.map, 'map')
             this.map.addControl(new WMap.NavigationControl({ type: BMAP_NAVIGATION_CONTROL_ZOOM, anchor: BMAP_ANCHOR_BOTTOM_RIGHT, offset: new WMap.Size(5, 20) }));//添加缩放控件
         } else {
             this.map.enableScrollWheelZoom();//启用滚轮放大缩小
@@ -545,6 +560,7 @@ class Maps extends Component {
     //搜索地址
     search(value) {
         // console.log(value)
+        this.delOverlay()
         this.flat = 0;
         this.setState({ Pois: null })
         var myGeo = new WMap.Geocoder();
@@ -554,18 +570,12 @@ class Maps extends Component {
             onSearchComplete: function (results) {
                 // 判断状态是否正确
                 if (local.getStatus() == BMAP_STATUS_SUCCESS) {
-                    // let itme = local.getResults();
-                    // console.log(itme)
-                    // var s = [];
                     var sData = []
                     for (var i = 0; i < results.getCurrentNumPois(); i++) {
                         let inx = i;
                         myGeo.getLocation(new WMap.Point(results.getPoi(i).point.lng, results.getPoi(i).point.lat), function (re) {
-                            console.log(re, 'result')
+                            // console.log(re, 'result')
                             let op = re
-                            // op.address = re.address;
-                            // op.addressComponents = re.addressComponents;
-                            // op.point = re.point;
                             op.title = results.getPoi(inx).title
                             sData.push(op)
                             if (sData.length) {
