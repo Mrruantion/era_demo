@@ -177,39 +177,41 @@ class Install extends Component {
         super(props, context);
         const minDate = new Date();
         const maxDate = new Date();
-        minDate.setFullYear(minDate.getFullYear() - 1);
+        // minDate.setFullYear(minDate.getFullYear() - 1);
         minDate.setHours(0, 0, 0, 0);
-        maxDate.setFullYear(maxDate.getFullYear() + 1);
-        maxDate.setHours(0, 0, 0, 0);
+        // maxDate.setFullYear(maxDate.getFullYear() + 1);
+        // maxDate.setHours(0, 0, 0, 0);
 
         this.state = {
             minDate: minDate,
-            maxDate: maxDate,
-            autoOk: false,
-            disableYearSelection: false,
             value24: new Date(),
             menuVal: parseInt(_g.productId),
             account: null,
             valid_code: null,
         };
         this.changeDate = this.changeDate.bind(this);
-        this.handleChangeTimePicker24 = this.handleChangeTimePicker24.bind(this);
+        this.timeChange = this.timeChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.accountChange = this.accountChange.bind(this);
         this.change = this.change.bind(this);
+        this.submit = this.submit.bind(this);
         this.formData = {
             mobile: null,
             valid_code: null,
             valid_type: 1,
             password: null,
         };
+        this.data = {}
     }
     changeDate(e, date) {
         console.log(e, W.dateToString(date))
+        this.data.date = W.dateToString(date)
+
     }
-    handleChangeTimePicker24(event, date) {
+    timeChange(event, date) {
         console.log(date, 'date')
         this.setState({ value24: date });
+        this.data.time = W.dateToString(date)
     };
     handleChange(e, i, v) {
         this.setState({ menuVal: v })
@@ -242,6 +244,12 @@ class Install extends Component {
             this.setState({ valid_code: null })
         }
         this.formData[name] = val;
+    }
+
+    submit(){
+        let date=this.data.date.slice(0,10);
+        let time=this.data.time.slice(10);
+        console.log(date+time);
     }
     render() {
         console.log(this.formData)
@@ -279,7 +287,7 @@ class Install extends Component {
                 </div>
                 <div>
                     <span style={{ display: 'inline-block', lineHeight: '40px' }}>{'预约时间：'}</span>
-                    <span>
+                    {/* <span>
                         <DatePicker
                             name="date"
                             defaultDate={this.state.minDate}
@@ -295,7 +303,28 @@ class Install extends Component {
                             format="24hr"
                             name="time"
                             value={this.state.value24}
-                            onChange={this.handleChangeTimePicker24}
+                            onChange={this.timeChange}
+                            style={{ display: 'inline-block' }}
+                            textFieldStyle={{ width: '0.65rem', fontSize: '.256rem', height: 40, lineHeight: '20px', paddingLeft: 5 }}
+                        />
+                    </span> */}
+                    <span>
+                        <DatePicker
+                            name="date"
+                            defaultDate={this.state.minDate}
+                            onChange={this.changeDate}
+                            cancelLabel={___.cancel}
+                            okLabel={___.ok}
+                            style={{ display: 'inline-block' }}
+                            textFieldStyle={{ width: '1.5rem', fontSize: '.256rem', height: 40, lineHeight: '20px' }}
+                        />
+                        <TimePicker
+                            value={this.state.value24}
+                            format="24hr"
+                            onChange={this.timeChange}
+                            cancelLabel={___.cancel}
+                            okLabel={___.ok}
+                            name="time"
                             style={{ display: 'inline-block' }}
                             textFieldStyle={{ width: '0.65rem', fontSize: '.256rem', height: 40, lineHeight: '20px', paddingLeft: 5 }}
                         />
@@ -325,7 +354,7 @@ class Install extends Component {
                 </div>
             </div>
             <div style={{ fontSize: '.26rem', textAlign: 'center', marginTop: 30 }}>
-                <RaisedButton disabled={disabled} label={'确认预约'} primary={true} labelStyle={{ fontSize: '.24rem' }} style={{}} onClick={this.cusSave} labelColor='#eee' />
+                <RaisedButton disabled={disabled} label={'确认预约'} primary={true} labelStyle={{ fontSize: '.24rem' }} style={{}} onClick={this.submit} labelColor='#eee' />
             </div>
         </div>)
     }
