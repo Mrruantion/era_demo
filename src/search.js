@@ -14,6 +14,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import VerificationCode from './_component/base/verificationCode';
 import VerificationOrig from './_component/base/verificationOrig';
 import Input from './_component/base/input';
+import { changeToLetter, getOpenIdKey } from './_modules/tool';
 // import {ThemeProvider} from './_theme/defalut'
 
 const thisView = window.LAUNCHER.getView();
@@ -111,7 +112,7 @@ class App extends Component {
                 "<div style='margin:0 0 5px 0;padding:0.2em 0'><span>产品价格：</span>" +
                 "<span>" + product[0].ContractPrice + "</span></div>" +
                 "<h5 style='margin:0 0 5px 0;padding:0.2em 0'>服务说明：</h5>" +
-                "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'>"+ele.declare+"</p>" +
+                "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'>" + ele.declare + "</p>" +
                 "</div>";
 
             let div = document.createElement('div');
@@ -246,11 +247,60 @@ class Install extends Component {
         this.formData[name] = val;
     }
 
-    submit(){
-        let date=this.data.date.slice(0,10);
-        let time=this.data.time.slice(10);
-        console.log(date+time);
+    submit() {
+        let date = this.data.date.slice(0, 10);
+        let time = this.data.time.slice(10);
+        console.log(date + time);
+        if (this.formData.mobile) {
+            let that = this
+            let value;
+            let key = getOpenIdKey();
+            let op = Object.assign({}, data);
+            let password = data.mobile.slice(-6)
+            Wapi.user.register(reg => {
+                if (reg.status_code == 0 || reg.status_code == 8) {
+                    Wapi.user.login(r => {
+                        Wapi.user.update(res => {
+                            console.log('更新openid', res)
+                        }, {
+                                _objectId: reg.uid,
+                                access_token: r.access_token,
+                                ['authData.' + key]: _g.openid
+                            })
+                        Wapi.customer.get(res => {
+                            if (!res.data) {
+                                Wapi.customer.add(cus => { //扫码用户
+                                }, {
+                                        custType: '买家',
+                                        access_token: r.access_token,
+                                        custTypeId: 8,
+                                        tel: data.mobile,
+                                        uid: reg.uid,
+                                        name: data.mobile,
+                                    })
+                            }
+                        }, {
+                                access_token: r.access_token,
+                                uid: reg.uid
+                            })
+                        Wapi.user.get(ress => {
+
+                        }, {
+                                mobile: data.mobile,
+                                access_token: r.access_token
+                            }, {
+                                fields: 'subWx,authData,mobile,objectId'
+                            })
+                    }, {
+                            account: data.mobile,
+                            password: password
+                        })
+                }
+            }, op)
+
+        }
     }
+
     render() {
         console.log(this.formData)
         // console.log(_g)
@@ -287,27 +337,6 @@ class Install extends Component {
                 </div>
                 <div>
                     <span style={{ display: 'inline-block', lineHeight: '40px' }}>{'预约时间：'}</span>
-                    {/* <span>
-                        <DatePicker
-                            name="date"
-                            defaultDate={this.state.minDate}
-                            autoOk={this.state.autoOk}
-                            minDate={this.state.minDate}
-                            maxDate={this.state.maxDate}
-                            onChange={this.changeDate}
-                            disableYearSelection={this.state.disableYearSelection}
-                            style={{ display: 'inline-block' }}
-                            textFieldStyle={{ width: '1.5rem', fontSize: '.256rem', height: 40, lineHeight: '20px' }}
-                        />
-                        <TimePicker
-                            format="24hr"
-                            name="time"
-                            value={this.state.value24}
-                            onChange={this.timeChange}
-                            style={{ display: 'inline-block' }}
-                            textFieldStyle={{ width: '0.65rem', fontSize: '.256rem', height: 40, lineHeight: '20px', paddingLeft: 5 }}
-                        />
-                    </span> */}
                     <span>
                         <DatePicker
                             name="date"
@@ -358,4 +387,39 @@ class Install extends Component {
             </div>
         </div>)
     }
+}
+
+function sendTemplate(r, data, cus) {
+    Wapi.user.get(res => {
+        let openid = res.data.authData.openId
+        Wapi.serverApi.sendWeixinByTemplate(send => {   //发送给扫码用户
+            // console.log('第二次呼叫失败推送扫码用户模板消息',send);
+        }, {
+                openId: car_openid,   //车主的openid
+                wxAppKey: _g.wx_app_id,
+                templateId: 'OPENTM202521861',
+                type: '0',
+                data: {
+                    "first": {//标题
+                        "value": title,
+                        "color": "#173177"
+                    },
+                    "keyword1": {//车牌号
+                        "value": plate,
+                        "color": "#173177"
+                    },
+                    "keyword2": {//通知时间
+                        "value": W.dateToString(new Date()),
+                        "color": "#173177"
+                    },
+                    "remark": {
+                        "value": value,
+                        "color": "#173177"
+                    }
+                }
+            });
+    }, {
+            access_token: r.access_token,
+            objectId: cus.uid
+        })
 }

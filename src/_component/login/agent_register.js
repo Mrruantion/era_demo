@@ -144,7 +144,7 @@ class AgentRegisterBox extends Component {
                 <div style={sty.r}>
                     <form style={{ position: 'relative', width: '100%', background: '#fff' }}>
                         <input name='contact' onChange={this.nameChange} placeholder={___.person_name} style={sty.input} />
-                        {/* <SexRadio onChange={this.sexChange} style={{ position: 'absolute', right: '0px', top: '8px' }} /> */}
+                        <SexRadio onChange={this.sexChange} style={{ position: 'absolute', right: '0px', top: '8px' }} />
                     </form>
                 </div>
                 <RegisterOrig onSuccess={this.handleNext} beforRegister={this.beforRegister} />

@@ -1,7 +1,7 @@
 /**
  * 应用数据库定义，每做一个更改必须更改版本号
  */
-let version = 6;//版本号
+let version = 7;//版本号
 
 //地区表
 // export const area={
@@ -383,6 +383,33 @@ export const employee = {
     ]
 }
 
+//二维码映射表
+export const qrData={
+    name: 'qrData',             //表名
+    desc: '二维码映射表',             //表描述
+    type: 1,             //类型(0:基础表, 1:用户表)
+    isApi: true,           //是否开放API
+    isPrivate: true,       //是否隐私数据, 如果是调用API时需要访问令牌
+    isCache: true,         //数据是否启用缓存
+    cacheField: 'updatedAt',       //缓存日期字段
+    fieldDefine: [
+        {
+            'name': 'id',
+            'desc': '数据id',
+            'type': 'Number',
+            'default':'@AutoInc',
+            'query': true,    //可查询字段
+        },{
+            'name': 'data',
+            'desc': '对应的数据',
+            'type': 'Object',
+            'query': true,    //可查询字段
+        }
+    ],
+    indexDefine: [
+        {id:1}
+    ]
+}
 //二维码与活动映射表
 export const qrLink = {
     name: 'qrLink',             //表名
@@ -457,7 +484,7 @@ export const qrLink = {
 //     weixin,qrData,activityProduct,qrDistribution,qrLink,authorize,promotion
 // ];
 let TABLES = [
-    customer
+    qrData
 ]
 let old_vareion = localStorage.getItem('table.json.js.version');
 localStorage.setItem('table.json.js.version', version);
