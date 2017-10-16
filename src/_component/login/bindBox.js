@@ -34,9 +34,9 @@ class BindBox extends Component {
         this.codeRight = true;
         this.forceUpdate();
     }
-    accountChange(e) {
-        let _mobile = e.target.value;
-        this.setState({ mobile: _mobile });
+    // accountChange(e) {
+    //     let _mobile = e.target.value;
+    //     this.setState({ mobile: _mobile });
         // let _this=this;
         // let reg=/^[1][3578][0-9]{9}$/;
         // if(reg.test(_mobile)){
@@ -50,6 +50,10 @@ class BindBox extends Component {
         // }else{
         //     _this.setState({mobile:''});
         // }
+    // }
+    accountChange(e) {
+        let _mobile = e.target.value;
+        this.setState({ mobile: _mobile });
     }
 
     submit() {
@@ -97,7 +101,7 @@ class BindBox extends Component {
                             onChange = { this.change }
                             onSuccess = { this.success }
                             style = {{ width: '100%' }}
-                            needExist = { true }
+                            needExist = { false }
                         /> 
                     </div > 
                 </div> 

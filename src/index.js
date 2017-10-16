@@ -196,6 +196,14 @@ class App extends Component {
             <BindBox onSuccess={this.loginSuccess} openId={_g.openid} />,
             <QrBox />
         ]
+        // let actives = [
+               
+        //         <BindBox onSuccess={this.loginSuccess} openId={_g.openid} />,
+        //         <Login onSuccess={this.loginSuccess} style={login_sty} ssoLoginFail={this.showBind} />,
+        //         <Forget onSuccess={this.forgetSuccess} user={this._res ? this._res.data : null} />,
+        //         <AgentShowBox success={this.registerCallback} />,
+        //         <QrBox />
+        // ]
         let buttons = (this.state.active && this.state.active != 3) ?
             (<FlatButton label={___.login} primary={true}
                 onClick={

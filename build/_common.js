@@ -12,5 +12,5 @@ var getScriptRequest = function() {
 
 var sr = getScriptRequest();
 // console.log(JSON.stringify(sr));
-W.version = '65';
+W.version = '4';
 document.write('<script src="' + sr["u"] + 'common.js?v=' + W.version + '"><\/script>');

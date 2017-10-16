@@ -922,12 +922,12 @@ keys = undefined;
 if (_g.wx_app_id && _g.wx_app_id !== 'undefined') {
     W.setSetting("wx_app_id", _g.wx_app_id);
     WiStorm.config.wx_app_id = _g.wx_app_id;
-    WiStorm.config.wx_login = WiStorm.config.wx_login + '?wx_app_id=' + WiStorm.config.wx_app_id;
+    // WiStorm.config.wx_login = WiStorm.config.wx_login + '?wx_app_id=' + WiStorm.config.wx_app_id;
 } else {
     if (W.getSetting("wx_app_id") && W.getSetting("wx_app_id") !== 'undefined') {
         WiStorm.config.wx_app_id = W.getSetting("wx_app_id") || WiStorm.config.wx_app_id;
     }
-    WiStorm.config.wx_login = WiStorm.config.wx_login + '?wx_app_id=' + WiStorm.config.wx_app_id;
+    // WiStorm.config.wx_login = WiStorm.config.wx_login + '?wx_app_id=' + WiStorm.config.wx_app_id;
 }
 
 // 2017-03-31 先获取公众号本身的用户信息，如果获取不到，则获取全局的用户信息

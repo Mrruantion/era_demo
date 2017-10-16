@@ -163,7 +163,7 @@ class AgentShowBox extends Component {
                     {
 
                         _g.custType === '1' ? '卖家注册' :
-                            _g.custType === '5' ? '卖家注册' : '错误类型注册'
+                            _g.custType === '5' ? '安装门店注册' : '错误类型注册'
                     }
                 </p>
                 {box}
