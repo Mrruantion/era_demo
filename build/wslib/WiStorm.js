@@ -834,7 +834,7 @@ if (location.protocol == "https:") {
 }
 
 if (location.host.indexOf('localhost') == -1 && !location.host.match(/(192\.|127\.)/))
-    WiStorm_root += "autogps/";
+    WiStorm_root += "shanzhuang/";
 var u = navigator.userAgent;
 var _d = false;
 if (_g.debug) _d = true;
@@ -846,7 +846,7 @@ window.WiStorm = {
         "skin": "default",
         "default_language": "zh-cn",
         "update_url": WiStorm_root + "update/version.json",
-        "home_url": "/autogps/src/moblie/home.html",
+        "home_url": "/shanzhuang/src/moblie/home.html",
         "wx_ticket_url": location.origin + "/WX.TokenAndTicket.php?action=ticket",
         "wx_sdk": "https://res.wx.qq.com/open/js/jweixin-1.0.0.js",
         "wx_login": location.origin + "/oauth2.php",

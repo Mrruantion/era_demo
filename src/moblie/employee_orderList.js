@@ -36,7 +36,7 @@ class App extends Component {
             left: { borderRadius: '.14rem 0 0 .14rem' },
             right: { borderRadius: '0 .14rem .14rem 0' },
             active: { background: '#00a1ff', color: '#fff' },
-            p: { margin: 0, padding: 0, overflow: 'hidden' },
+            p: { margin: 0, padding: 0, overflow: 'hidden',lineHeight:'.35rem' },
             span1:{ float: 'left', width: '28%', textAlign: 'right' },
             span2:{ width: '72%', paddingLeft: '5%', float: 'left', boxSizing: 'border-box'}
         }

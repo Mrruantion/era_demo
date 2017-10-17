@@ -161,6 +161,10 @@ class App extends Component {
     go(tab) {
         thisView.goTo(tab.props.value + '.js');
     }
+    personalInfo() {
+        thisView.goTo('./myAccount/personal_info.js');
+        // this.forceUpdate();
+    }
     render() {
         let pages = _user.customer ? _user.customer.custTypeId == 1 ? _pages2 : _user.customer.custTypeId == 5 ? _pages : [] : _pages3
         const cards = pages.map(e => (<ModuleCard title={e.name} icon={e.icon} href={e.href} key={e.href} />));
@@ -171,7 +175,7 @@ class App extends Component {
                         <div style={{ fontSize: '18px' }} onClick={this.personalInfo}>
                             <img src='../../img/head.png' style={sty.head_pic} />
                             <div>
-                                {_user.mobile}
+                                {_user.employee ? _user.employee.name : _user.customer.name}
                             </div>
                         </div>
                     </div>
